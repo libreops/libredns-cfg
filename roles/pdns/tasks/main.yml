@@ -1,0 +1,19 @@
+---
+- name: Install required packages
+  apt: name={{ item }} state=present
+  with_items:
+    - pdns-recursor
+    - bind-utils
+
+- name: Ensure PowerDNS configuration directory exists
+  file: name={{ pdns_rec_config_dir }} state=directory owner="root" group="root"
+
+- name: Add configuration for the PowerDNS Recursor
+  template: src=recursor.conf.j2 dest={{ pdns_rec_config_dir }}/recursor.conf
+  notify: Restart PowerDNS Recursor
+
+- name: Download Tier 1
+  command: dig . NS @75.127.96.89 | grep -v '^;' | sort -u -V > {{ pdns_rec_config_dir }}/root.hint
+
+- name: Start and enable the PowerDNS Recursor service
+  service: name=pdns-recursor state=started enabled=true
