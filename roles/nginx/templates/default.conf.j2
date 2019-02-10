@@ -1,0 +1,24 @@
+########################
+## {{ ansible_managed }}
+server {
+    listen [::]:80 default_server;
+    listen 80 default_server;
+    server_name _;
+    return 301 https://{{ domain }}$request_uri;
+}
+
+server {
+    listen [::]:443 ssl http2 default_server;
+    listen 443 ssl http2 default_server;
+    server_name _;
+
+    root /var/www/default/;
+    index index.html;
+
+    ssl_certificate /etc/letsencrypt/live/libredns.gr/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/libredns.gr/privkey.pem;
+
+    error_log   /var/log/nginx/default_error.log;
+
+    error_page 404 = /;
+}
