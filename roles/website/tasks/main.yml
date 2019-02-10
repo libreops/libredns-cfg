@@ -1,0 +1,10 @@
+---
+- name: Remove default web folder
+  file:
+    path: /var/www/default
+    state: absent
+
+- name: Fetch website
+  git:
+    repo: {{ website_repo }}
+    dest: /var/www/default
