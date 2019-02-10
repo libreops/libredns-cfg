@@ -1,0 +1,11 @@
+---
+- name: Install system dependencies
+  apt: name={{ item }} state=present
+  with_items:
+    - vim
+    - git
+    - bash-completion
+    - mlocate
+
+- name: Set hostname
+  hostname: name={{ inventory_hostname }}
