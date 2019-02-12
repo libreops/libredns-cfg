@@ -1,5 +1,5 @@
 ---
-pdns_rec_user: "pdns-recursor"
-pdns_rec_group: "pdns-recursor"
+pdns_rec_user: "pdns"
+pdns_rec_group: "pdns"
 
-pdns_rec_config_dir: "/etc/pdns-recursor"
+pdns_rec_config_dir: "/etc/powerdns/"
