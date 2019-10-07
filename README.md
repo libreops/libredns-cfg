@@ -1,12 +1,18 @@
+# LibreDNS Ansible Setup
+
 <img src="https://libredns.gr/static/img/libredns.svg" width="250">
 
 Ansible scripts for <a href="https://libredns.gr/">LibreDNS</a>.
 
 ## Requirements
 
-1. Ansible (duh..)
+1. Ansible
 2. GPG
 3. Running gpg-agent
+
+## Verify
+
+    ansible -i hosts -m ping libredns
 
 ## Usage
 
