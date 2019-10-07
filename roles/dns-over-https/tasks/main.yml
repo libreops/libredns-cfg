@@ -15,7 +15,7 @@
   get_url:
     url: https://gitlab.com/libreops/libredns/dns-over-https/-/jobs/artifacts/master/raw/doh-server_{{ VERSION.stdout }}_amd64.deb?job=run-build
     dest: /tmp/doh-server_{{ VERSION.stdout }}_amd64.deb
-  when: not rainloop_exists.stat.exists
+  when: not stat_result.stat.exists
 
 - name: Install dns-over-https
   apt: deb="/tmp/doh-server_{{ VERSION.stdout }}_amd64.deb"
