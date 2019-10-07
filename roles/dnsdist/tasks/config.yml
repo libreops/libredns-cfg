@@ -1,0 +1,6 @@
+---
+- name: Configure dnsdist
+  template:
+    src: dnsdist conf.j2
+    dest: /etc/dnsdist/dnsdist.conf
+  notify: restart dnsdist

@@ -1,9 +1,9 @@
 #!/bin/sh
 
 # dnsdist
-cp -f /root/.acme.sh/{{DOMAIN}}/fullchain.cer /root/.acme.sh/{{DOMAIN}}/{{DOMAIN}}.key /etc/dnsdist/
+cp -f /root/.acme.sh/{{ DOMAIN }}/fullchain.cer /root/.acme.sh/{{ DOMAIN }}/{{ DOMAIN }}.key /etc/dnsdist/
 # dns-over-http
-cp -f /root/.acme.sh/{{DOMAIN}}/{{DOMAIN}}.cer /root/.acme.sh/{{DOMAIN}}/{{DOMAIN}}.key /etc/dns-over-https/
+cp -f /root/.acme.sh/{{ DOMAIN }}/{{ DOMAIN }}.cer /root/.acme.sh/{{ DOMAIN }}/{{ DOMAIN }}.key /etc/dns-over-https/
 
 systemctl restart doh-server.service
 systemctl restart dnsdist.service

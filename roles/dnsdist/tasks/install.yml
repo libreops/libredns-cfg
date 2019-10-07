@@ -1,0 +1,20 @@
+---
+- name: Add an Apt signing key, uses whichever key is at the URL
+  apt_key:
+    url: https://repo.powerdns.com/FD380FBB-pub.asc
+    state: present
+
+- name: Add dnsdist repo
+  apt_repository:
+    repo: deb [arch=amd64] http://repo.powerdns.com/ubuntu bionic-dnsdist-13 main
+    state: present
+
+- name: Install dns packages
+  apt:
+    name: "{{ packages }}"
+  vars:
+    packages:
+    - dnsdist
+    - dnsutils
+    state: present
+    update_cache: yes

@@ -1,0 +1,6 @@
+---
+- name: Allow DoT
+  ufw:
+    rule: allow
+    port: 853
+    proto: tcp

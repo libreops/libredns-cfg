@@ -1,0 +1,13 @@
+-- resets the list to this array
+setACL("::/0")
+addACL("0.0.0.0/0")
+
+-- accept DNS queries on UDP and TCP
+--setLocal('127.0.0.1:53')
+addTLSLocal('{{ ansible_default_ipv4.address }}', '/etc/dnsdist/fullchain.cer','/etc/dnsdist//{{ DOMAIN }}.key')
+
+-- fwd queries to
+newServer({address="1.1.1.1:53"})
+newServer({address="1.0.0.1:53"})
+newServer({address="8.8.8.8:53"})
+newServer({address="8.8.4.4:53"})

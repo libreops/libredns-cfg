@@ -1,0 +1,6 @@
+---
+- name: Allow dns-over-https
+  ufw:
+    rule: allow
+    port: 8053
+    proto: tcp

@@ -1,3 +1,0 @@
----
-- name: Restart PowerDNS Recursor
-  service: name=pdns-recursor state=restarted

@@ -1,11 +1,14 @@
 ---
-- name: Install system dependencies
-  apt: 
-    pkg: 
-    - vim
-    - git
-    - bash-completion
+- name: Install Packages
+  apt:
+    pkg:
+    - ansible
+    - certbot
+    - figlet
+    - jq
     - mlocate
+    - socat
+    - vim
     state: present
 
 - name: Set hostname
