@@ -1,0 +1,11 @@
+- hosts: libredns
+  become: yes
+  gather_facts: yes
+
+  roles:
+    - common
+    - acme
+    - dns-over-https
+    - dnsdist
+    - nginx
+    - website
