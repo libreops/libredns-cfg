@@ -14,3 +14,5 @@
 - name: Install acme.sh
   shell: |
     /tmp/acme.sh
+  args:
+    creates: "/root/.acme.sh/acme.sh"
