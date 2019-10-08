@@ -2,6 +2,11 @@
   become: yes
   gather_facts: yes
 
+  vars:
+    DOMAIN: "libredns.gr"
+    GANDI_LIVEDNS_KEY: ""
+    website_repo: "https://gitlab.com/libreops/libredns/libredns.gr.git"
+
   roles:
     - common
     - acme
