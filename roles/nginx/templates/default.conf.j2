@@ -1,3 +1,7 @@
+upstream doh {
+    server 127.0.0.1:8053;
+}
+
 server {
     listen 80 default_server;
     listen [::]:80 default_server;
@@ -33,7 +37,7 @@ server {
     location /dns-query {
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
-        proxy_pass http://localhost:8053/dns-query;
+        proxy_pass http://doh/dns-query;
     }
 
 }
