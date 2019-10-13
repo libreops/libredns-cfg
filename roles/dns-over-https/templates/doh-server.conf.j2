@@ -27,13 +27,16 @@ path = "/dns-query"
 
 # Upstream DNS resolver
 # If multiple servers are specified, a random one will be chosen each time.
-upstream = [
-    "1.1.1.1:53",
-    "1.0.0.1:53",
-    "8.8.8.8:53",
-    "8.8.4.4:53",
-]
+## upstream = [
+##     "1.1.1.1:53",
+##     "1.0.0.1:53",
+##     "8.8.8.8:53",
+##     "8.8.4.4:53",
+## ]
 
+upstream = [
+     "127.0.0.1:5353",
+]
 # Upstream timeout
 timeout = 10
 
