@@ -1,0 +1,27 @@
+---
+- name: Add an Apt signing key, uses whichever key is at the URL
+  apt_key:
+    url: https://repo.powerdns.com/FD380FBB-pub.asc
+    state: present
+
+- name: Add dnsdist repo
+  apt_repository:
+    repo: deb [arch=amd64] http://repo.powerdns.com/ubuntu bionic-rec-42 main
+    state: present
+
+- name: Ansible copy file to remote server
+  copy:
+    src: apt.pdns
+    dest: /etc/apt/preferences.d/pdns
+
+- name: Install dns packages
+  apt:
+    name: "{{ packages }}"
+  vars:
+    packages:
+    - dnsutils
+    - pdns-recursor
+    state: present
+    # Do not start the service
+    policy_rc_d: 101
+    update_cache: yes

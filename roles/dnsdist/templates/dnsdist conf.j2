@@ -7,7 +7,8 @@ addACL("0.0.0.0/0")
 addTLSLocal('{{ ansible_default_ipv4.address }}', '/etc/dnsdist/fullchain.cer','/etc/dnsdist//{{ DOMAIN }}.key')
 
 -- fwd queries to
-newServer({address="1.1.1.1:53"})
-newServer({address="1.0.0.1:53"})
-newServer({address="8.8.8.8:53"})
-newServer({address="8.8.4.4:53"})
+newServer({address="127.0.0.1:5353"})
+-- newServer({address="1.1.1.1:53"})
+-- newServer({address="1.0.0.1:53"})
+-- newServer({address="8.8.8.8:53"})
+-- newServer({address="8.8.4.4:53"})

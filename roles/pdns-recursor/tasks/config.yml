@@ -1,0 +1,26 @@
+---
+- name: Ensure Powerdns Recursor port is 5353
+  lineinfile:
+    path: /etc/powerdns/recursor.conf
+    regexp: '^local-port='
+    line: 'local-port=5353'
+
+- name: Ensure Powerdns Recursor reads opennic root hint
+  lineinfile:
+    path: /etc/powerdns/recursor.conf
+    regexp: "^hint-file="
+    line: "hint-file=/etc/powerdns/root.hints"
+
+- name: Check if root hints exist
+  stat:
+    path: "/etc/powerdns/root.hints"
+  register: stat_result
+
+- name: Update root hint
+  shell: |
+    set -o pipefail
+    dig . NS @75.127.96.89 | egrep -v '^;|^$' > /etc/powerdns/root.hints
+  args:
+    executable: /bin/bash
+  when: stat_result.stat.exists
+  notify: restart pdns-recursor
