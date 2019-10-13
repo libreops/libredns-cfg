@@ -36,6 +36,10 @@
       src: "dot.conf.j2",
       dest: "/etc/nginx/conf.d/dot.conf"
       }
+    - {
+      src: "security.conf.j2",
+      dest: "/etc/nginx/conf.d/security.conf"
+      }
 
 - name: Check if dhparam exist
   stat:
