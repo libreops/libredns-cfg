@@ -9,6 +9,7 @@
 
   roles:
     - common
+    - pdns-recursor
     - acme
     - dns-over-https
     - dnsdist
