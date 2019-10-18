@@ -1,0 +1,12 @@
+---
+- name: Copy Update Root Hint Script
+  copy:
+    src: update.root.hint.sh
+    dest: /usr/local/bin/update.root.hint.sh
+    mode: 0750
+
+- name: OpenNic NS Renewal
+  cron:
+    name: "a job for renew openic tier1 NS"
+    special_time: weekly
+    job: "/usr/local/bin/update.root.hint.sh"
