@@ -1,0 +1,33 @@
+---
+- name: Check if swap file exists
+  stat:
+    path: "/swap.img"
+  register: stat_result
+
+- name: Create a new swap file
+  shell: |
+    set -o pipefail
+    dd if=/dev/zero of=/swap.img bs=20480 count=102400
+    mkswap /swap.img -L swapfs
+    chmod 0600 /swap.img
+  args:
+    executable: /bin/bash
+  when: not stat_result.stat.exists
+
+- name: Check if swap file exists
+  stat:
+    path: "/swap.img"
+  register: stat_result
+
+- name: Mount swapfile
+  lineinfile:
+    path: /etc/fstab
+    regexp: '^/swap.img'
+    line: "/swap.img none  swap  sw  0 0"
+  when: stat_result.stat.exists
+
+- name: Mount samba share
+  command: |
+    swapon -a
+  when: stat_result.stat.exists
+
