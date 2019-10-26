@@ -1,0 +1,43 @@
+---
+- name: Copy recursor config file
+  copy:
+    src: /etc/powerdns/recursor.conf
+    dest: /etc/powerdns/recursor-ads.conf
+    remote_src: yes
+
+- name: Copy recursor systemd service file
+  copy:
+    src: /lib/systemd/system/pdns-recursor.service
+    dest: /lib/systemd/system/pdns-recursor-ads.service
+    remote_src: yes
+
+- name: Ensure Powerdns Recursor reads hosts file
+  lineinfile:
+    path: /etc/powerdns/recursor-ads.conf
+    regexp: '^etc-hosts-file='
+    line: 'etc-hosts-file=/etc/powerdns/hosts.txt'
+
+- name: Ensure Powerdns Recursor export hosts file
+  lineinfile:
+    path: /etc/powerdns/recursor-ads.conf
+    regexp: '^export-etc-hosts='
+    line: 'export-etc-hosts=on'
+
+- name: Ensure Powerdns Recursor port is 5454
+  lineinfile:
+    path: /etc/powerdns/recursor-ads.conf
+    regexp: '^local-port='
+    line: 'local-port=5454'
+
+- name: Ensure Powerdns Recursor systemd service file points to ads
+  lineinfile:
+    path: /lib/systemd/system/pdns-recursor-ads.service
+    regexp: '^ExecStart='
+    line: 'ExecStart=/usr/sbin/pdns_recursor --config-name=ads --daemon=no --write-pid=no --disable-syslog --log-timestamp=no'
+
+- name: Enable service pdns-recursor-ads, also issue daemon-reload
+  systemd:
+    state: restarted
+    enabled: yes
+    daemon_reload: yes
+    name: pdns-recursor-ads

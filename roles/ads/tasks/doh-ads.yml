@@ -1,0 +1,43 @@
+---
+- name: Copy dns-over-https config file
+  copy:
+    src: /etc/dns-over-https/doh-server.conf
+    dest: /etc/dns-over-https/doh-server-ads.conf
+    remote_src: yes
+
+- name: Copy dns-over-https systemd service file
+  copy:
+    src: /lib/systemd/system/doh-server.service
+    dest: /lib/systemd/system/doh-server-ads.service
+    remote_src: yes
+
+- name: Ensure dns-over-https listens at 8054
+  replace:
+    path: /etc/dns-over-https/doh-server-ads.conf
+    regexp: '8053'
+    replace: '8054'
+
+- name: Ensure dns-over-https sends queries at 5454
+  replace:
+    path: /etc/dns-over-https/doh-server-ads.conf
+    regexp: '5353'
+    replace: '5454'
+
+- name: Ensure dns-over-https endpoint is /ads
+  replace:
+    path: /etc/dns-over-https/doh-server-ads.conf
+    regexp: 'dns-query'
+    replace: 'ads'
+
+- name:  Ensure dns-over-https systemd service file points to ads
+  lineinfile:
+    path: /lib/systemd/system/doh-server-ads.service
+    regexp: '^ExecStart='
+    line: 'ExecStart=/usr/local/bin/doh-server -conf /etc/dns-over-https/doh-server-ads.conf'
+
+- name: Enable service doh-server-ads, also issue daemon-reload
+  systemd:
+    state: restarted
+    enabled: yes
+    daemon_reload: yes
+    name: doh-server-ads
