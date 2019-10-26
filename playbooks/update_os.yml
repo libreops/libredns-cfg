@@ -1,0 +1,43 @@
+---
+- name: Update Operating System
+  hosts: all
+  become: true
+  gather_facts: true
+
+  tasks:
+    - name: Update all packages on Ubuntu
+      apt:
+        update_cache: yes
+        cache_valid_time: 86400
+        upgrade: safe
+        autoclean: yes
+        autoremove: yes
+      when: ansible_distribution == "Ubuntu"
+
+    - name: Check if System restart required
+      stat:
+        path: "/var/run/reboot-required"
+      register: stat_result
+
+    - name: Inform if System restart required
+      debug:
+        msg: "System restart required !"
+      when:
+        - stat_result.stat.exists
+
+    - name: Rebooting ...
+      command: shutdown -r +1 "(ansible) Reboot required after upgrade"
+      ignore_errors: true
+      register: rebooting
+      when:
+        - stat_result.stat.exists
+
+    - name: Wait 90 seconds
+      wait_for:
+        path: /etc/os-release
+        delay: 90
+        timeout: 300
+      register: uptime
+      delegate_to: localhost
+      when:
+        - rebooting.changed
