@@ -1,0 +1,21 @@
+---
+- name: Download StevenBlack hosts
+  get_url:
+    url: https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts
+    dest: /etc/powerdns/hosts.txt
+    force: yes
+    mode: '0644'
+    owner: pdns
+    group: pdns
+
+- name: Copy Update StevenBlack Hosts Script
+  copy:
+    src: update.stevenBlack.hosts.sh
+    dest: /usr/local/bin/update.stevenBlack.hosts.sh
+    mode: 0750
+
+- name: StevenBlack Hosts Renewal
+  cron:
+    name: "a job for renew StevenBlack Hosts"
+    special_time: weekly
+    job: "/usr/local/bin/update.stevenBlack.hosts.sh"

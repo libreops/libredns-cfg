@@ -1,0 +1,28 @@
+---
+- name: Insert/Update upstream dns-οver-https-ads
+  blockinfile:
+    path: /etc/nginx/conf.d/doh.conf
+    block: |
+      upstream dns-over-https-ads {
+          server 127.0.0.1:8054;
+      }
+    insertbefore: "^upstream dns-over-https *"
+    marker: "## {mark} ANSIBLE upstream BLOCK"
+
+- name: Insert/Update upstream dns-οver-https-ads location
+  blockinfile:
+    path: /etc/nginx/conf.d/doh.conf
+    block: |
+        location /ads {
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_pass http://dns-over-https-ads/ads;
+        }
+    insertbefore: "location /dns-query *"
+    marker: "## {mark} ANSIBLE location BLOCK"
+
+- name: Restart nginx service
+  service:
+    name: nginx
+    state: restarted
+    enabled: yes
