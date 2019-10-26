@@ -1,0 +1,17 @@
+---
+- name: Ensure that test.libredns.gr exist in hosts file
+  lineinfile:
+    path: /etc/powerdns/test.hosts.txt
+    line: "{{ ansible_default_ipv4.address }} test.libredns.gr"
+
+- name: Ensure Powerdns Recursor reads hosts file
+  lineinfile:
+    path: /etc/powerdns/recursor.conf
+    regexp: '^etc-hosts-file='
+    line: 'etc-hosts-file=/etc/powerdns/test.hosts.txt'
+
+- name: Ensure Powerdns Recursor export hosts file
+  lineinfile:
+    path: /etc/powerdns/recursor.conf
+    regexp: '^export-etc-hosts='
+    line: 'export-etc-hosts=on'
