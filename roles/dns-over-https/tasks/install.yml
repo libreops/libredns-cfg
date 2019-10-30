@@ -1,8 +1,13 @@
 ---
 - name: Get latest version
   shell: |
+    set -o pipefail
     curl -sL https://api.github.com/repos/m13253/dns-over-https/tags | jq -r .[0].name | tr -d 'v'
   register: VERSION
+  changed_when: False
+  args:
+    warn: no
+    executable: /bin/bash
 
 - name: Check if dhparam exist
   stat:
