@@ -1,11 +1,56 @@
 ---
-- name: Remove default web folder
-  file:
-    path: /var/www/html/
-    state: absent
+- name: Create unprivileged use for website
+  user:
+    name: web
+    group: web
+    shell: /bin/bash
 
-- name: Fetch website
+- name: Create website folder
+  file:
+    path: "{{ website_root }}"
+    state: directory
+    mode: 0755
+    owner: web
+    group: web
+
+- name: Set git config variables
+  git_config:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    scope: global
+  become: yes
+  become_user: web
+  with_items:
+    - {
+      name: "alias.name",
+      value: "libredns"
+      }
+    - {
+      name: "alias.email",
+      value: "noreply@libredns.gr"
+      }
+
+- name: Create bare repo
   git:
     repo: "{{ website_repo }}"
-    dest: /var/www/html/
+    dest: "{{ website_bare }}"
+    bare: yes
     version: master
+  become: yes
+  become_user: web
+
+- name: Clone to webroot
+  git:
+    repo: "{{ website_bare }}"
+    dest: "{{ website_root }}"
+    version: master
+  become: yes
+  become_user: web
+
+- name: Copy the post-update hook
+  template:
+    src: "post-update.j2"
+    dest: "{{ website_bare }}/hooks/post-update"
+    owner: web
+    group: web
+    mode: 0755

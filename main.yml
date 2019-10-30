@@ -6,6 +6,8 @@
     DOMAIN: "libredns.gr"
     GANDI_LIVEDNS_KEY: ""
     website_repo: "https://gitlab.com/libreops/libredns/libredns.gr.git"
+    website_root: "/var/www/libredns.gr/"
+    website_bare: "/home/web/libredns.gr.git"
 
   roles:
     - common
