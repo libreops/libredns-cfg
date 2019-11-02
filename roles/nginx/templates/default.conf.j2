@@ -23,4 +23,8 @@ server {
     error_log   /var/log/nginx/default_error.log;
 
     error_page 404 = /;
+
+    location ~ /\.git {
+        deny all;
+    }
 }
