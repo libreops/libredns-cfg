@@ -4,9 +4,3 @@
 - import_tasks: config.yml
 
 - import_tasks: ufw.yml
-
-- name: Enable nginx service
-  service:
-    name: nginx
-    state: restarted
-    enabled: yes

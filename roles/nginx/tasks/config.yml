@@ -1,4 +1,15 @@
 ---
+- name: Check if dhparam exist
+  stat:
+    path: "/etc/ssl/dhparam.pem"
+  register: stat_result
+
+- name: Create dhparam.pem if not exists
+  command: |
+    openssl dhparam -out /etc/ssl/dhparam.pem 2048
+    creates: /etc/ssl/dhparam.pem
+  when: not stat_result.stat.exists
+
 - name: Remove default configuration file
   file:
     path: /etc/nginx/sites-enabled/default
@@ -41,19 +52,14 @@
       dest: "/etc/nginx/conf.d/security.conf"
       }
 
-- name: Check if dhparam exist
-  stat:
-    path: "/etc/ssl/dhparam.pem"
-  register: stat_result
-
-- name: Create dhparam.pem if not exists
-  command: |
-    openssl dhparam -out /etc/ssl/dhparam.pem 2048
-    creates: /etc/ssl/dhparam.pem
-  when: not stat_result.stat.exists
-
 - name: Remove nginx access logs if any
   shell: find /var/log/nginx/ -name "*access*" -delete
-    # find /var/log/nginx/ -name "*access*" -print0 | xargs --no-run-if-empty -0 rm
   register: rm_result
   changed_when: rm_result.stdout | length > 0
+
+- name: Check if nginx can restart
+  command:
+    "nginx -t -q"
+  notify:
+    - restart nginx
+  changed_when: False
