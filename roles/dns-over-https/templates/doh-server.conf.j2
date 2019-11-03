@@ -33,16 +33,13 @@ path = "/dns-query"
 # If multiple servers are specified, a random one will be chosen each time.
 
 upstream = [
-     "127.0.0.1:5353",
+     "udp:127.0.0.1:5353",
 ]
 # Upstream timeout
 timeout = 10
 
 # Number of tries if upstream DNS fails
 tries = 3
-
-# Only use TCP for DNS query
-tcp_only = true
 
 # Enable logging
 verbose = false
