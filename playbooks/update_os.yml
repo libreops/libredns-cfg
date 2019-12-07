@@ -10,8 +10,6 @@
         update_cache: yes
         cache_valid_time: 86400
         upgrade: safe
-        autoclean: yes
-        autoremove: yes
       when: ansible_distribution == "Ubuntu"
 
     - name: Check if System restart required
@@ -40,4 +38,12 @@
       register: uptime
       delegate_to: localhost
       when:
+        - rebooting.changed
+
+    - name: autoclean
+      apt:
+        autoclean: yes
+        autoremove: yes
+      when:
+        - ansible_distribution == "Ubuntu"
         - rebooting.changed
