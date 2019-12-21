@@ -3,11 +3,11 @@ setACL("::/0")
 addACL("0.0.0.0/0")
 
 -- accept DNS queries on UDP and TCP
--- setLocal('127.0.0.1:53')
+setLocal('127.0.0.1:53')
 
 -- DNS over TLS
-addTLSLocal('0.0.0.0', '/etc/dnsdist/fullchain.cer','/etc/dnsdist/{{ DOMAIN }}.key')
-addTLSLocal('::',      '/etc/dnsdist/fullchain.cer','/etc/dnsdist/{{ DOMAIN }}.key')
+addTLSLocal('0.0.0.0', '/etc/dnsdist/fullchain.cer', '/etc/dnsdist/{{ DOMAIN }}.key')
+addTLSLocal('::', '/etc/dnsdist/fullchain.cer', '/etc/dnsdist/{{ DOMAIN }}.key')
 
 -- DNS over HTTPS
 addDOHLocal("127.0.0.1:8053", nil, nil, "/dns-query", { reusePort=true })
