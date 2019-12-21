@@ -19,8 +19,3 @@
     name: "a job for renew StevenBlack Hosts"
     special_time: weekly
     job: "/usr/local/bin/update.stevenBlack.hosts.sh"
-
-- name: Ensure that test.libredns.gr exist in hosts file
-  lineinfile:
-    path: /etc/powerdns/hosts.txt
-    line: "{{ ansible_default_ipv4.address }} test.libredns.gr"

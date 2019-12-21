@@ -1,17 +1,15 @@
 ---
-- name: Ensure that test.libredns.gr exist in hosts file
-  lineinfile:
-    path: /etc/powerdns/test.hosts.txt
-    line: "{{ ansible_default_ipv4.address }} test.libredns.gr"
+- name: Copy powerdns lua script
+  template:
+    src: pdns.lua.j2
+    dest: /etc/powerdns/pdns.lua
+    owner: root
+    group: root
+    mode: 0644
 
 - name: Ensure Powerdns Recursor reads hosts file
   lineinfile:
     path: /etc/powerdns/recursor.conf
-    regexp: '^etc-hosts-file='
-    line: 'etc-hosts-file=/etc/powerdns/test.hosts.txt'
-
-- name: Ensure Powerdns Recursor export hosts file
-  lineinfile:
-    path: /etc/powerdns/recursor.conf
-    regexp: '^export-etc-hosts='
-    line: 'export-etc-hosts=on'
+    regexp: '^lua-dns-script='
+    line: 'lua-dns-script=/etc/powerdns/pdns.lua'
+  notify: restart pdns-recursor
