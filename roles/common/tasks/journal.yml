@@ -1,0 +1,25 @@
+---
+- name: control how much disk space the journal may use up at most
+  block:
+    - name: SystemMaxUse
+      lineinfile:
+        path: /etc/systemd/journald.conf
+        regexp: "^SystemMaxUse="
+        line: "SystemMaxUse=100M"
+    - name: SystemMaxUse
+      lineinfile:
+        path: /etc/systemd/journald.conf
+        regexp: "^SystemMaxFileSize="
+        line: "SystemMaxFileSize=50M"
+    - name: RuntimeMaxUse
+      lineinfile:
+        path: /etc/systemd/journald.conf
+        regexp: "^RuntimeMaxUse="
+        line: "RuntimeMaxUse=100M"
+    - name: RuntimeMaxFileSize
+      lineinfile:
+        path: /etc/systemd/journald.conf
+        regexp: "^RuntimeMaxFileSize="
+        line: "RuntimeMaxFileSize=50M"
+  notify:
+    - restart journald

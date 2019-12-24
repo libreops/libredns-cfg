@@ -15,3 +15,5 @@
   hostname: name={{ inventory_hostname }}
 
 - import_tasks: swap.yml
+
+- import_tasks: journal.yml
