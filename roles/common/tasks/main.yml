@@ -17,3 +17,6 @@
 - import_tasks: swap.yml
 
 - import_tasks: journal.yml
+
+- import_tasks: floating.yml
+  tags: floating

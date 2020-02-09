@@ -1,0 +1,7 @@
+---
+- name: copy floating config  file to server
+  copy:
+    src: 60-my-floating-ip.cfg
+    dest: /etc/network/interfaces.d/
+  notify:
+    - restart networking
