@@ -6,8 +6,8 @@ addACL("0.0.0.0/0")
 setLocal('127.0.0.1:53')
 
 -- DNS over TLS
-addTLSLocal('0.0.0.0', '/etc/dnsdist/fullchain.cer', '/etc/dnsdist/{{ DOMAIN }}.key')
-addTLSLocal('::', '/etc/dnsdist/fullchain.cer', '/etc/dnsdist/{{ DOMAIN }}.key')
+addTLSLocal('0.0.0.0', '/etc/dnsdist/fullchain.cer', '/etc/dnsdist/{{ DOMAIN }}.key',{ciphers='SECURE256:!VERS-TLS1.0:!VERS-SSL3.0'})
+addTLSLocal('::', '/etc/dnsdist/fullchain.cer', '/etc/dnsdist/{{ DOMAIN }}.key',{ciphers='SECURE256:!VERS-TLS1.0:!VERS-SSL3.0'})
 
 -- DNS over HTTPS
 addDOHLocal("127.0.0.1:8053", nil, nil, "/dns-query", { reusePort=true })

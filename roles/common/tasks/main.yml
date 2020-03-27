@@ -1,15 +1,5 @@
 ---
-- name: Install Packages
-  apt:
-    pkg:
-    - ansible
-    - certbot
-    - figlet
-    - jq
-    - mlocate
-    - socat
-    - vim
-    state: present
+- import_tasks: install.yml
 
 - name: Set hostname
   hostname: name={{ inventory_hostname }}
