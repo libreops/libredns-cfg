@@ -1,0 +1,3 @@
+---
+# defaults file for powerdns recursor
+pdnsrec_ver: "bionic-rec-43 main"
