@@ -4,10 +4,11 @@
     url: https://repo.powerdns.com/FD380FBB-pub.asc
     state: present
 
-- name: Add dnsdist repo
+- name: Add PowerDNS Recursor repo
   apt_repository:
-    repo: deb [arch=amd64] http://repo.powerdns.com/ubuntu bionic-rec-42 main
+    repo: deb [arch=amd64] http://repo.powerdns.com/ubuntu {{ pdnsrec_ver }}
     state: present
+  tags: pdnsrec_install
 
 - name: Ansible copy file to remote server
   copy:
