@@ -1,0 +1,29 @@
+---
+- name: set nginx upstream dns-οver-https-family
+  block:
+  - name: Insert/Update upstream dns-οver-https-family
+    blockinfile:
+      path: /etc/nginx/conf.d/doh.conf
+      insertbefore: "^upstream dns-over-https-ads"
+      block: |
+        upstream dns-over-https-family {
+          server 127.0.0.1:8055;
+        }
+  - name: Insert/Update upstream dns-οver-https-family location
+    blockinfile:
+      path: /etc/nginx/conf.d/doh.conf
+      insertbefore: "location /dns-query *"
+      block: |
+        location /family {
+          proxy_set_header Host $host;
+          proxy_set_header X-Real-IP $remote_addr;
+          proxy_pass http://dns-over-https-family/family;
+        }
+      validate: "echo %s && nginx -t"
+
+- name: Check if nginx can restart
+  command:
+    "nginx -t -q"
+  notify:
+    - restart nginx
+  changed_when: False

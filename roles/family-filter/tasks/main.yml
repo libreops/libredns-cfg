@@ -1,0 +1,8 @@
+---
+- import_tasks: get-hosts.yml
+
+- import_tasks: pdns-hosts.yml
+
+- import_tasks: dnsdist-hosts.yml
+
+- import_tasks: nginx-hosts.yml

@@ -1,0 +1,21 @@
+---
+- name: Download and install StevenBlack Porn Hosts
+  get_url:
+    url: https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/porn/hosts
+    dest: /etc/powerdns/porn-hosts.txt
+    force: yes
+    mode: '0644'
+    owner: pdns
+    group: pdns
+
+- name: Copy StevenBlack Porn Hosts Update Script
+  copy:
+    src: update.stevenBlack.porn-hosts.sh
+    dest: /usr/local/bin/update.stevenBlack.porn-hosts.sh
+    mode: 0750
+
+- name: Setup cron entry for StevenBlack Porn Hosts Renewal
+  cron:
+    name: "a job for renew StevenBlack Porn Hosts"
+    special_time: weekly
+    job: "/usr/local/bin/update.stevenBlack.porn-hosts.sh"

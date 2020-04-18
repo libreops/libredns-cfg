@@ -1,0 +1,28 @@
+---
+- name: Copy powerdns recursor family configuration file
+  copy:
+    src:  recursor-family.conf
+    dest: /etc/powerdns/recursor-family.conf
+    force: yes
+    mode: '0644'
+    owner: pdns
+    group: pdns
+
+- name: Copy powerdns recursor family systemd service file
+  copy:
+    src:  /lib/systemd/system/pdns-recursor.service
+    dest: /lib/systemd/system/pdns-recursor-family.service
+    remote_src: yes
+
+- name: Ensure powerdns recursor family systemd service file points to powerdns recursor family
+  lineinfile:
+    path: /lib/systemd/system/pdns-recursor-family.service
+    regexp: '^ExecStart='
+    line: 'ExecStart=/usr/sbin/pdns_recursor --config-name=family --daemon=no --write-pid=no --disable-syslog --log-timestamp=no'
+
+- name: Enable service pdns-recursor-family, after reload systemd daemon
+  systemd:
+    state: restarted
+    enabled: yes
+    daemon_reload: yes
+    name: pdns-recursor-family

@@ -1,0 +1,27 @@
+---
+- name: Does powerdns recursor family runs?
+  wait_for: host=127.0.0.1 port=5555 timeout=5
+
+- name: Ensure dnsdist listens to DoH family endpoint
+  lineinfile:
+    path: /etc/dnsdist/dnsdist.conf
+    regexp: '127.0.0.1:8055'
+    line: 'addDOHLocal("127.0.0.1:8055", nil, nil, "/family")'
+
+- name: Ensure dnsdist config file points to powerdns recursor family
+  blockinfile:
+    path: /etc/dnsdist/dnsdist.conf
+    block: |
+      -- Filter DNS queries to backend DNS based on endpoint
+      newServer({address="127.0.0.1:5555", pool="family"})
+      addAction(HTTPPathRegexRule("family"), PoolAction("family"))
+    insertafter: 'addDOHLocal("127.0.0.1:8055", nil, nil, "/family")'
+    marker: "## {mark} ANSIBLE location BLOCK"
+    validate: "echo %s && dnsdist --check-config"
+
+- name: Check if dnsdist can be restarted
+  command:
+    "dnsdist --check-config"
+  notify:
+    - restart dnsdist
+  changed_when: False
