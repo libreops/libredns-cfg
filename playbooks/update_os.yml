@@ -43,6 +43,12 @@
     - name: autoclean
       apt:
         autoclean: yes
+      when:
+        - ansible_distribution == "Ubuntu"
+        - rebooting.changed
+
+    - name: Remove dependencies that are no longer required
+      apt:
         autoremove: yes
       when:
         - ansible_distribution == "Ubuntu"
