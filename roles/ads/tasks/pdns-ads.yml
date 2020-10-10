@@ -3,12 +3,14 @@
   copy:
     src: /etc/powerdns/recursor.conf
     dest: /etc/powerdns/recursor-ads.conf
+    mode: '0644'
     remote_src: yes
 
 - name: Copy recursor systemd service file
   copy:
     src: /lib/systemd/system/pdns-recursor.service
     dest: /lib/systemd/system/pdns-recursor-ads.service
+    mode: '0644'
     remote_src: yes
 
 - name: Ensure Powerdns Recursor reads hosts file

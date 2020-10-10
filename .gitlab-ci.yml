@@ -8,4 +8,4 @@ test:
   script:
     - apk add gcc openssl-dev libffi-dev libc-dev
     - pip install ansible-lint
-    - ansible-lint main.yml
+    - ansible-lint -x 106 main.yml
