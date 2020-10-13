@@ -6,7 +6,7 @@
 
 - name: Add dnsdist repo
   apt_repository:
-    repo: deb [arch=amd64] http://repo.powerdns.com/ubuntu bionic-dnsdist-14 main
+    repo: deb [arch=amd64] http://repo.powerdns.com/ubuntu bionic-dnsdist-15 main
     state: present
 
 - name: Install dns packages

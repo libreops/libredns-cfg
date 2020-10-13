@@ -8,4 +8,5 @@
     - ../private.yml
 
   tasks:
-    - authorized_key: user="{{ ansible_user }}" state=present exclusive=yes key="{{ admins|join('\n') }}"
+    - name: Update SSH authorized keys
+      authorized_key: user="{{ ansible_user }}" state=present exclusive=yes key="{{ admins|join('\n') }}"
