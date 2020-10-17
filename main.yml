@@ -9,7 +9,7 @@
 
   roles:
     - common
-    - pdns-recursor
+    - pdns_recursor
     - acme
     - dnsdist
     - nginx
