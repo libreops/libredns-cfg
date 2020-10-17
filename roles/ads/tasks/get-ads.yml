@@ -4,7 +4,7 @@
     url: https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts
     dest: /etc/powerdns/hosts.txt
     force: yes
-    mode: '0644'
+    mode: 0644
     owner: pdns
     group: pdns
 

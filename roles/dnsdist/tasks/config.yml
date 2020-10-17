@@ -19,5 +19,5 @@
   template:
     src: dnsdist.conf.j2
     dest: /etc/dnsdist/dnsdist.conf
-    mode: '0644'
+    mode: 0644
   notify: restart dnsdist

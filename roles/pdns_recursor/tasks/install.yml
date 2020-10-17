@@ -14,15 +14,15 @@
   copy:
     src: apt.pdns
     dest: /etc/apt/preferences.d/pdns
-    mode: '0644'
+    mode: 0644
 
 - name: Install dns packages
   apt:
     name: "{{ packages }}"
   vars:
     packages:
-    - dnsutils
-    - pdns-recursor
+      - dnsutils
+      - pdns-recursor
     state: present
     # Do not start the service
     policy_rc_d: 101

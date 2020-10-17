@@ -3,6 +3,6 @@
   copy:
     src: 60-my-floating-ip.cfg
     dest: /etc/network/interfaces.d/
-    mode: '0644'
+    mode: 0644
   notify:
     - restart networking

@@ -2,8 +2,8 @@
 - name: Ensure Powerdns Recursor port is 5353
   lineinfile:
     path: /etc/powerdns/recursor.conf
-    regexp: '^local-port='
-    line: 'local-port=5353'
+    regexp: "^local-port="
+    line: "local-port=5353"
 
 - name: Ensure Powerdns Recursor reads opennic root hint
   lineinfile:

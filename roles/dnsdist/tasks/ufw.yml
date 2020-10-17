@@ -2,11 +2,11 @@
 - name: Allow DoT
   ufw:
     rule: allow
-    port: 853
+    port: "853"
     proto: tcp
 
 - name: Allow DoT
   ufw:
     rule: allow
-    port: 854
+    port: "854"
     proto: tcp
