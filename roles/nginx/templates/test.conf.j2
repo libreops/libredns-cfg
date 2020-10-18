@@ -6,7 +6,7 @@ server {
     listen [::]:80;
     server_name test.{{ DOMAIN }};
 
-    return 301 https://{{ DOMAIN }};
+    return 301 https://test.{{ DOMAIN }};
 }
 
 server {
@@ -14,12 +14,12 @@ server {
     listen       [::]:443 ssl http2;
     server_name  test.{{ DOMAIN }};
 
+    root /var/www/html/;
+
     ssl_certificate /root/.acme.sh/{{ DOMAIN }}/fullchain.cer;
     ssl_certificate_key /root/.acme.sh/{{ DOMAIN }}/{{ DOMAIN }}.key;
 
     add_header 'Access-Control-Allow-Origin' 'https://{{ DOMAIN }}';
     add_header 'Access-Control-Allow-Methods' 'GET';
-
-    return 301 https://{{ DOMAIN }};
 }
 
