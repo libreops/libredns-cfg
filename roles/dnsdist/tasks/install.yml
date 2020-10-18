@@ -14,7 +14,7 @@
     name: "{{ packages }}"
   vars:
     packages:
-    - dnsdist
-    - dnsutils
+      - dnsdist
+      - dnsutils
     state: present
     update_cache: yes

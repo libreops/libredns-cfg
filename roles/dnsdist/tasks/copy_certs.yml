@@ -9,10 +9,10 @@
     remote_src: yes
   with_items:
     - {
-      src: "/root/.acme.sh/{{ DOMAIN }}/fullchain.cer",
-      dest: "/etc/dnsdist/fullchain.cer"
+        src: "/root/.acme.sh/{{ DOMAIN }}/fullchain.cer",
+        dest: "/etc/dnsdist/fullchain.cer",
       }
     - {
-      src: "/root/.acme.sh/{{ DOMAIN }}/{{ DOMAIN }}.key",
-      dest: "/etc/dnsdist/{{ DOMAIN }}.key"
-    }
+        src: "/root/.acme.sh/{{ DOMAIN }}/{{ DOMAIN }}.key",
+        dest: "/etc/dnsdist/{{ DOMAIN }}.key",
+      }

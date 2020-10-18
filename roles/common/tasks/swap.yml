@@ -22,7 +22,7 @@
 - name: Mount swapfile
   lineinfile:
     path: /etc/fstab
-    regexp: '^/swap.img'
+    regexp: "^/swap.img"
     line: "/swap.img none  swap  sw  0 0"
   when: stat_result.stat.exists
 
@@ -30,4 +30,3 @@
   command: |
     swapon -a
   when: stat_result.stat.exists
-

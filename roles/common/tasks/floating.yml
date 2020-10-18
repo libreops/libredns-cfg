@@ -1,8 +1,8 @@
 ---
 - name: copy floating config  file to server
-  copy:
-    src: 60-my-floating-ip.cfg
-    dest: /etc/network/interfaces.d/
-    mode: '0644'
+  template:
+    src: 60-my-floating-ip.cfg.j2
+    dest: /etc/network/interfaces.d/60-my-floating-ip.cfg
+    mode: 0644
   notify:
     - restart networking

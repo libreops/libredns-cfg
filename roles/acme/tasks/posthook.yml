@@ -8,5 +8,5 @@
 - name: Ensure PostHook.sh is in acme.sh
   lineinfile:
     path: /root/.acme.sh/{{ DOMAIN }}/{{ DOMAIN }}.conf
-    regexp: '^Le_PostHook='
+    regexp: "^Le_PostHook="
     line: Le_PostHook='/usr/local/bin/PostHook.sh'

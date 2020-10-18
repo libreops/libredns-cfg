@@ -8,11 +8,11 @@
 - name: Install Packages
   apt:
     pkg:
-    - ansible
-    - certbot
-    - figlet
-    - jq
-    - mlocate
-    - socat
-    - vim
+      - ansible
+      - certbot
+      - figlet
+      - jq
+      - mlocate
+      - socat
+      - vim
     state: present

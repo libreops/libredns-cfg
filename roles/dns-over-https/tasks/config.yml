@@ -6,4 +6,4 @@
   template:
     src: doh-server.conf.j2
     dest: /etc/dns-over-https/doh-server.conf
-    mode: '0644'
+    mode: 0644
