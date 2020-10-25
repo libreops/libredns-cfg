@@ -1,7 +1,7 @@
 ---
 - name: Create WildCard Certificate
   shell: |
-    acme.sh --issue --dns dns_gandi_livedns \
+    "/root/.acme.sh"/acme.sh --issue --dns dns_gandi_livedns \
       -d {{ DOMAIN }} \
       -d "*.{{ DOMAIN }}" \
       --dnssleep 300
