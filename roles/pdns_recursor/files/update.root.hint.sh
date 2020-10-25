@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Get OpenNic Tier1 NS
-dig . NS @75.127.96.89 | egrep -v '^;|^$' | sort -u -V | column -t > /tmp/root.hint
+dig . NS @{{ OPENIC_ROOTNS }} | grep -Ev '^;|^$' | sort -u -V | column -t > /tmp/root.hint
 
 # Get diff
 diff -q <(sort -V /etc/powerdns/root.hints | column -t) /tmp/root.hint
