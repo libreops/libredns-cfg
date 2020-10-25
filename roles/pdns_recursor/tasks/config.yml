@@ -22,5 +22,5 @@
     dig . NS @{{ OPENIC_ROOTNS }} | grep -Ev '^;|^$' > /etc/powerdns/root.hints
   args:
     executable: /bin/bash
-  when: stat_result.stat.exists
+  when: not stat_result.stat.exists
   notify: restart pdns-recursor
