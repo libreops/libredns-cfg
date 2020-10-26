@@ -26,7 +26,7 @@
     line: "/swap.img none  swap  sw  0 0"
   when: stat_result.stat.exists
 
-- name: Mount samba share
+- name: Mount swap partition
   command: |
     swapon -a
   when: stat_result.stat.exists
