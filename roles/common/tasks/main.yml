@@ -1,9 +1,7 @@
 ---
 - import_tasks: install.yml
 
-- name: Set hostname
-  hostname:
-    name: "{{ inventory_hostname }}"
+- import_tasks: hostname.yml
 
 - import_tasks: swap.yml
 

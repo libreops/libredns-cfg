@@ -1,0 +1,11 @@
+---
+- name: Set hostname
+  hostname:
+    name: "{{ inventory_hostname }}"
+
+- name: Ensure hostname is in hosts file
+  lineinfile:
+    path: /etc/hosts
+    regexp: "^127.0.1.1 "
+    line: "127.0.1.1 {{ inventory_hostname }}"
+
