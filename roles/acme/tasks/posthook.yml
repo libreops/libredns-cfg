@@ -1,5 +1,5 @@
 ---
-- name: Copy PostHool.sh
+- name: Copy PostHook script
   template:
     src: PostHook.sh.j2
     dest: /usr/local/bin/PostHook.sh
