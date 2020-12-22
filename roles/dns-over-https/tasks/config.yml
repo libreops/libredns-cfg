@@ -1,9 +1,0 @@
----
-- name: Check that powerdns recursor runs
-  wait_for: host=127.0.0.1 port=5353 timeout=3
-
-- name: Configure dns-over-https
-  template:
-    src: doh-server.conf.j2
-    dest: /etc/dns-over-https/doh-server.conf
-    mode: 0644
