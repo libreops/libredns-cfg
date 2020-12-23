@@ -1,4 +1,10 @@
 ---
+- name: Install Packages
+  apt:
+    pkg:
+      - git
+    state: present
+
 - name: Remove default web folder
   file:
     path: /var/www/html/
