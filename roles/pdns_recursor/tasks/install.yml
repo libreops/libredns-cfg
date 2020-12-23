@@ -6,9 +6,8 @@
 
 - name: Add PowerDNS Recursor repo
   apt_repository:
-    repo: deb [arch=amd64] http://repo.powerdns.com/ubuntu {{ pdnsrec_ver }}
+    repo: deb [arch=amd64] http://repo.powerdns.com/ubuntu {{ pdns_rec_ver }} main
     state: present
-  tags: pdnsrec_install
 
 - name: Ansible copy file to remote server
   copy:
@@ -16,14 +15,9 @@
     dest: /etc/apt/preferences.d/pdns
     mode: 0644
 
-- name: Install dns packages
+- name: Install PowerDNS packages
   apt:
-    name: "{{ packages }}"
-  vars:
-    packages:
-      - dnsutils
-      - pdns-recursor
+    pkg: pdns-recursor
     state: present
-    # Do not start the service
-    policy_rc_d: 101
     update_cache: yes
+    policy_rc_d: 101

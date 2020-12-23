@@ -10,6 +10,7 @@
     pkg:
       - ansible
       - certbot
+      - dnsutils
       - figlet
       - jq
       - mlocate
