@@ -27,4 +27,4 @@
   command: "nginx -t -q"
   notify:
     - restart nginx
-  changed_when: False
+  changed_when: True
