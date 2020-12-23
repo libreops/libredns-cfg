@@ -3,6 +3,6 @@
 # dnsdist
 cp -f /root/.acme.sh/{{ DOMAIN }}/fullchain.cer /root/.acme.sh/{{ DOMAIN }}/{{ DOMAIN }}.key /etc/dnsdist/
 
-systemctl restart dnsdist.service
-
-systemctl restart nginx
+# restart services
+systemctl reload dnsdist
+systemctl reload nginx
