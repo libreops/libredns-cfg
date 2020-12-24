@@ -3,3 +3,5 @@
   service:
     name: pdns-recursor
     state: restarted
+    enabled: yes
+
