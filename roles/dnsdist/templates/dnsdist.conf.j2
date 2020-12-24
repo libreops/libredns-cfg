@@ -6,21 +6,25 @@ addACL("0.0.0.0/0")
 setLocal('127.0.0.1:53')
 
 -- DNS over TLS
-addTLSLocal('{{ STATIC }}', '/etc/dnsdist/fullchain.cer', '/etc/dnsdist/{{ DOMAIN }}.key', { reusePort=true } )
-
--- DNS over TLS, noads
-addTLSLocal('{{ STATIC }}:854', '/etc/dnsdist/fullchain.cer', '/etc/dnsdist/{{ DOMAIN }}.key', { reusePort=true } )
+addTLSLocal('0.0.0.0', '/etc/dnsdist/fullchain.cer', '/etc/dnsdist/{{ DOMAIN }}.key', { reusePort=true } )
 
 -- DNS over HTTPS
 addDOHLocal("127.0.0.1:8053", nil, nil, "/dns-query", { reusePort=true })
-addDOHLocal("127.0.0.1:8054", nil, nil, "/ads", { reusePort=true })
-
--- Filter DNS queries to backend DNS based on endpoint
-newServer({address="127.0.0.1:5454", pool="ads"})
-addAction(HTTPPathRegexRule("ads"), PoolAction("ads"))
-
--- DoT noads
-addAction(DSTPortRule(854), PoolAction("ads"))
 
 -- fwd queries to:
 newServer({address="127.0.0.1:5353"})
+
+-- DDOS protection
+setRingBuffersSize(1000000, 500)
+
+local dbr = dynBlockRulesGroup()
+dbr:setQueryRate(15, 10, "Exceeded query rate", 90)
+dbr:setRCodeRate(DNSRCode.NXDOMAIN, 10, 10, "Exceeded NXD rate", 60)
+dbr:setRCodeRate(DNSRCode.SERVFAIL, 10, 10, "Exceeded ServFail rate", 60)
+dbr:setQTypeRate(DNSQType.ANY, 5, 10, "Exceeded ANY rate", 60)
+dbr:setResponseByteRate(10000, 10, "Exceeded resp BW rate", 60)
+dbr:excludeRange({"127.0.0.0/8"})
+
+function maintenance()
+    dbr:apply()
+end
