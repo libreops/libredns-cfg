@@ -4,8 +4,8 @@
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
     owner: root
-    group: root
-    mode: 0400
+    group: _dnsdist
+    mode: 0440
     remote_src: yes
   with_items:
     - {
