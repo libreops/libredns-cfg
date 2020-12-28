@@ -2,4 +2,8 @@
   service:
     name: nginx
     state: restarted
-    enabled: yes
+
+- name: restart dnsdist
+  service:
+    name: dnsdist
+    state: restarted

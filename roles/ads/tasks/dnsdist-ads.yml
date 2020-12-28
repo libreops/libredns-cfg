@@ -1,0 +1,20 @@
+---
+- name: Update dnsdist noads configuration
+  blockinfile:
+    path: /etc/dnsdist/dnsdist.conf
+    block: |
+      -- DNS over TLS, noads
+      addTLSLocal('0.0.0.0:854', '/etc/dnsdist/fullchain.cer', '/etc/dnsdist/{{ DOMAIN }}.key', { reusePort=true } )
+
+      -- DNS over HTTPS - noads
+      addDOHLocal("127.0.0.1:8054", nil, nil, "/ads", { reusePort=true })
+
+      -- Filter DNS queries to backend DNS based on endpoint
+      newServer({address="127.0.0.1:5454", pool="ads"})
+      addAction(HTTPPathRegexRule("ads"), PoolAction("ads"))
+
+      -- DoT noads
+      addAction(DSTPortRule(854), PoolAction("ads"))
+
+    marker: "-- {mark} ANSIBLE BLOCK"
+  notify: restart dnsdist

@@ -3,4 +3,6 @@
 
 - import_tasks: pdns-ads.yml
 
+- import_tasks: dnsdist-ads.yml
+
 - import_tasks: nginx-ads.yml
