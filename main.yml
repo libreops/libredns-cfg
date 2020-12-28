@@ -6,7 +6,6 @@
     DOMAIN: "libredns.gr"
     STATIC: "116.202.176.26"
     GANDI_LIVEDNS_KEY: ""
-    OPENIC_ROOTNS: "45.56.115.189"
     website_repo: "https://gitlab.com/libreops/libredns/libredns.gr.git"
 
   roles:
