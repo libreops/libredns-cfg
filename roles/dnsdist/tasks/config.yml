@@ -9,13 +9,13 @@
     state: stopped
   when: ansible_facts.services['systemd-resolved.service'] is defined
 
+- name: Check that powerdns recursor runs
+  wait_for: host=127.0.0.1 port=5353 timeout=3
+
 - name: Remove resolv configuration file
   file:
     path: /etc/resolv.conf
     state: absent
-
-- name: Check that powerdns recursor runs
-  wait_for: host=127.0.0.1 port=5353 timeout=3
 
 - name: Set DNS
   copy:
