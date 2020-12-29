@@ -5,3 +5,5 @@
     state: restarted
     enabled: yes
 
+- name: get root hints
+  command: /usr/local/bin/get_root_hints.sh
