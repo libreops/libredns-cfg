@@ -3,7 +3,7 @@ setACL("::/0")
 addACL("0.0.0.0/0")
 
 -- accept DNS queries on UDP and TCP
-setLocal('127.0.0.1:53')
+setLocal('0.0.0.0:53')
 
 -- DNS over TLS
 addTLSLocal('0.0.0.0', '/etc/dnsdist/fullchain.cer', '/etc/dnsdist/{{ DOMAIN }}.key', { reusePort=true } )
@@ -28,3 +28,9 @@ dbr:excludeRange({"127.0.0.0/8"})
 function maintenance()
     dbr:apply()
 end
+
+-- Bootstrapping DOH and DOT
+addAction(AndRule({DSTPortRule(53),makeRule("{{ DOMAIN }}")}),SpoofAction("{{ STATIC }}"))
+addAction("127.0.0.1/8", AllowAction())
+addAction(DSTPortRule(53),DropAction())
+
