@@ -2,6 +2,7 @@
 - name: Update dnsdist noads configuration
   blockinfile:
     path: /etc/dnsdist/dnsdist.conf
+    insertbefore: '^newServer'
     block: |
       -- DNS over TLS, noads
       addTLSLocal('0.0.0.0:854', '/etc/dnsdist/fullchain.cer', '/etc/dnsdist/{{ DOMAIN }}.key', { reusePort=true } )
