@@ -1,10 +1,11 @@
 ---
 - name: Create WildCard Certificate
   shell: |
-    "/root/.acme.sh"/acme.sh --issue --dns dns_gandi_livedns \
-      -d {{ DOMAIN }} \
+    /root/.acme.sh/acme.sh --issue --dns dns_gandi_livedns \
+      -d {{ DOMAIN }}     \
       -d "*.{{ DOMAIN }}" \
-      --dnssleep 300
+      --dnssleep 300      \
+      {{ STAGING | default('', true) }}
   environment:
     GANDI_LIVEDNS_KEY: "{{ GANDI_LIVEDNS_KEY }}"
   register: acme
