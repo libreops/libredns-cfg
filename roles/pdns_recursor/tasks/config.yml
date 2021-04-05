@@ -4,14 +4,12 @@
     path: "/etc/powerdns/root.hints"
   register: stat_result
 
-- name: Update root hint
-  shell: |
-    set -o pipefail
-    OPENIC_ROOTNS=$(curl -sL 'https://api.opennicproject.org/geoip/?bare&res=1')
-    dig . NS @{ OPENIC_ROOTNS } | grep -Ev '^;|^$' > /etc/powerdns/root.hints
-  args:
-    executable: /bin/bash
-  when: not stat_result.stat.exists
+- name: Get root hints from closest OpenNic tier-2
+  copy:
+    src: get_root_hints.sh
+    dest: /usr/local/bin/get_root_hints.sh
+    mode: 0755
+  notify: get root hints
 
 - name: Powerdns Recursor Configuration
   copy:
