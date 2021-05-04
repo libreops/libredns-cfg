@@ -15,14 +15,27 @@ addDOHLocal("127.0.0.1:8053", nil, nil, "/dns-query", { reusePort=true })
 newServer({address="127.0.0.1:5353"})
 
 -- DDOS protection
-setRingBuffersSize(1000000, 500)
 
+-- prevent lock contention between threads, keep under 1m
+setRingBuffersSize(30000, 30)
+
+-- create Dynamic Block Rules Group object, to add rules
 local dbr = dynBlockRulesGroup()
-dbr:setQueryRate(15, 10, "Exceeded query rate", 90)
-dbr:setRCodeRate(DNSRCode.NXDOMAIN, 10, 10, "Exceeded NXD rate", 60)
-dbr:setRCodeRate(DNSRCode.SERVFAIL, 10, 10, "Exceeded ServFail rate", 60)
-dbr:setQTypeRate(DNSQType.ANY, 5, 10, "Exceeded ANY rate", 60)
-dbr:setResponseByteRate(10000, 10, "Exceeded resp BW rate", 60)
+
+-- queries per second, how many seconds, msg, temp block in sec
+dbr:setQueryRate(30, 10, "Exceeded query rate", 90)
+
+-- prevent DDoS by querying Non eXisting Domains & Server failure
+dbr:setRCodeRate(DNSRCode.NXDOMAIN, 10, 10, "Exceeded NXD rate", 90)
+dbr:setRCodeRate(DNSRCode.SERVFAIL, 10, 10, "Exceeded ServFail rate", 90)
+
+-- rate limit ANY queries
+dbr:setQTypeRate(DNSQType.ANY, 5, 10, "Exceeded ANY rate", 90)
+
+-- limit large responses, that would produce amplification
+dbr:setResponseByteRate(10000, 10, "Exceeded responses bandwidth rate", 90)
+
+-- exclude localhost from rules
 dbr:excludeRange({"127.0.0.0/8"})
 
 function maintenance()
