@@ -1,5 +1,5 @@
 domainame = "test.{{DOMAIN}}"
-response  = "{{ ansible_default_ipv4.address }}"
+response  = "{{ STATIC }}"
 
 function nxdomain(dq)
     if dq.qname:equal(domainame) then
