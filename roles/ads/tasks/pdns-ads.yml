@@ -1,7 +1,7 @@
 ---
 - name: Powerdns Recursor Configuration
-  copy:
-    src: recursor-ads.conf
+  template:
+    src: recursor-ads.conf.j2
     dest: /etc/powerdns/recursor-ads.conf
     mode: 0640
     group: pdns

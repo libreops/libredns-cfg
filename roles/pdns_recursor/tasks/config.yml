@@ -12,8 +12,8 @@
   notify: get root hints
 
 - name: Powerdns Recursor Configuration
-  copy:
-    src: recursor.conf
+  template:
+    src: recursor.conf.j2
     dest: /etc/powerdns/recursor.conf
     mode: 0640
   notify: restart pdns-recursor
