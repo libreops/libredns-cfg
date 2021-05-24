@@ -12,7 +12,7 @@
 
       -- Filter DNS queries to backend DNS based on endpoint
       newServer({address="127.0.0.1:5454", pool="ads"})
-      addAction(HTTPPathRegexRule("ads"), PoolAction("ads"))
+      addAction(HTTPPathRule("/ads"), PoolAction("ads"))
 
       -- DoT noads
       addAction(DSTPortRule(854), PoolAction("ads"))
