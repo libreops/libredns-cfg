@@ -1,6 +1,10 @@
 ########################
 ## {{ ansible_managed }}
 
+upstream dns-over-https-ads {
+    server 127.0.0.1:8054;
+}
+
 upstream dns-over-https {
     server 127.0.0.1:8053;
 }
@@ -23,6 +27,12 @@ server {
 
     location / {
         return 301 https://{{ DOMAIN }}$request_uri;
+    }
+
+    location /ads {
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_pass http://dns-over-https-ads/ads;
     }
 
     location /dns-query {

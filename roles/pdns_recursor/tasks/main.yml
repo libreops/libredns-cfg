@@ -6,3 +6,7 @@
 - import_tasks: config.yml
 
 - import_tasks: cron.yml
+
+- import_tasks: get-ads.yml
+
+- import_tasks: pdns-ads.yml
