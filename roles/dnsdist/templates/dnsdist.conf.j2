@@ -3,16 +3,31 @@ setACL("::/0")
 addACL("0.0.0.0/0")
 
 -- accept DNS queries on UDP and TCP
-setLocal('0.0.0.0:53')
+setLocal('{{ STATIC }}:53')
 
 -- DNS over TLS
-addTLSLocal('0.0.0.0', '/etc/dnsdist/fullchain.cer', '/etc/dnsdist/{{ DOMAIN }}.key', { reusePort=true } )
+{% for vcpus in range(ansible_processor_vcpus) %}
+addTLSLocal('{{ STATIC }}', '/etc/dnsdist/fullchain.cer', '/etc/dnsdist/{{ DOMAIN }}.key', { reusePort=true } )
+{% endfor %}
+-- DNS over TLS, noads
+addTLSLocal('{{ STATIC }}:854', '/etc/dnsdist/fullchain.cer', '/etc/dnsdist/libredns.gr.key', { reusePort=true } )
 
 -- DNS over HTTPS
 addDOHLocal("127.0.0.1:8053", nil, nil, "/dns-query", { reusePort=true })
+-- DNS over HTTPS - noads
+addDOHLocal("127.0.0.1:8054", nil, nil, "/ads", { reusePort=true })
+
+-- Filter DNS queries to backend DNS based on endpoint
+newServer({address="127.0.0.1:5454", pool="ads"})
+addAction(HTTPPathRule("/ads"), PoolAction("ads"))
+
+-- DoT noads
+addAction(DSTPortRule(854), PoolAction("ads"))
 
 -- fwd queries to:
+{% for vcpus in range(ansible_processor_vcpus) %}
 newServer({address="127.0.0.1:5353"})
+{% endfor %}
 
 -- DDOS protection
 
