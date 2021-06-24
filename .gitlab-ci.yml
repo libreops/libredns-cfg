@@ -1,4 +1,4 @@
-image: alpine
+image: ubuntu:20.04
 
 stages:
   - test
@@ -6,5 +6,7 @@ stages:
 test:
   stage: test
   script:
-    - apk add ansible-lint
-    - ansible-lint main.yml
+    - apt-get update
+    - apt-get -y install ansible-lint
+    - ansible-lint -p main.yml
+
