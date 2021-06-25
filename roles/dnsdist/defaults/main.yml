@@ -1,3 +1,3 @@
 ---
 # defaults file for dnsdist
-dnsdist_ver: "focal-dnsdist-15"
+dnsdist_ver: "focal-dnsdist-16"
