@@ -15,4 +15,5 @@
     - acme
     - dnsdist
     - nginx
+    - firewall
     - website

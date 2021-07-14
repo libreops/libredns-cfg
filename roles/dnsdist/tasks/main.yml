@@ -4,5 +4,3 @@
 - import_tasks: copy_certs.yml
 
 - import_tasks: config.yml
-
-- import_tasks: ufw.yml

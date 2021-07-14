@@ -1,0 +1,58 @@
+# Empty iptables rule file
+*mangle
+:PREROUTING  ACCEPT [0:0]
+:INPUT       ACCEPT [0:0]
+:FORWARD     ACCEPT [0:0]
+:OUTPUT      ACCEPT [0:0]
+:POSTROUTING ACCEPT [0:0]
+COMMIT
+
+*nat
+:PREROUTING  ACCEPT [0:0]
+:INPUT       ACCEPT [0:0]
+:OUTPUT      ACCEPT [0:0]
+:POSTROUTING ACCEPT [0:0]
+COMMIT
+
+# Set a default DROP/ACCEPT policy
+*filter
+:INPUT   DROP   [0:0]
+:FORWARD DROP   [0:0]
+:OUTPUT  ACCEPT [0:0]
+
+# default rules
+-A INPUT -i lo -j ACCEPT
+-A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+-A INPUT -m state       --state RELATED,ESTABLISHED -j ACCEPT
+-A INPUT -p icmp --icmp-type 8 -m conntrack --ctstate NEW -j ACCEPT
+
+# Incoming
+
+# ssh
+-A INPUT -m tcp -p tcp --dport 45678 -j ACCEPT
+
+# nginx
+-A INPUT -m tcp -p tcp --dport 80 -j ACCEPT
+
+# DoH
+-A INPUT -m tcp -p tcp --dport 443 -j ACCEPT
+
+# DoT
+-A INPUT -m tcp -p tcp --dport 853 -m limit --limit 100/s -j ACCEPT
+-A INPUT -m tcp -p tcp --dport 854 -j ACCEPT
+
+# Bootstrap DNS
+-A INPUT -m tcp -p tcp --dport 53 -j ACCEPT
+-A INPUT -m udp -p udp --dport 53 -j ACCEPT
+
+# end of custom openings
+-A INPUT   -j REJECT --reject-with icmp-host-prohibited
+-A FORWARD -j REJECT --reject-with icmp-host-prohibited
+
+# Create Log chain
+-N logdrop
+-A logdrop -j DROP
+-A INPUT -m conntrack --ctstate INVALID -j logdrop
+
+## Commit
+COMMIT

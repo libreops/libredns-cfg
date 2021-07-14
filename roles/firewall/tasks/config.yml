@@ -1,0 +1,17 @@
+---
+- name: Populate service facts
+  service_facts:
+
+- name: Stop and disable ufw service
+  service:
+    name: ufw
+    enabled: no
+    state: stopped
+  when: ansible_facts.services['ufw.service'] is defined
+
+- name: Set iptables
+  copy:
+    src: files/rules.v4
+    dest: /etc/iptables/rules.v4
+    mode: 0644
+  notify: restart iptables

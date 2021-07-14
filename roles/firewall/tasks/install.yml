@@ -1,0 +1,9 @@
+- name: Install iptables packages
+  apt:
+    name: "{{ packages }}"
+  vars:
+    packages:
+      - iptables
+      - iptables-persistent
+    state: present
+    update_cache: yes
