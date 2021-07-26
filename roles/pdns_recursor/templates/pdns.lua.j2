@@ -1,5 +1,5 @@
 domainame = "test.{{DOMAIN}}"
-response  = "{{ STATIC }}"
+response  = "{{ IPv4 }}"
 
 function nxdomain(dq)
     if dq.qname:equal(domainame) then
