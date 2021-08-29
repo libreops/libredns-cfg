@@ -3,14 +3,17 @@ setACL("::/0")
 addACL("0.0.0.0/0")
 
 -- accept DNS queries on UDP and TCP
-setLocal('{{ STATIC }}:53')
+setLocal('{{ IPv4 }}:53')
+setLocal('[{{ IPv6 }}]:53')
 
 -- DNS over TLS
 {% for vcpus in range(ansible_processor_vcpus) %}
-addTLSLocal('{{ STATIC }}', '/etc/dnsdist/fullchain.cer', '/etc/dnsdist/{{ DOMAIN }}.key', { reusePort=true } )
+addTLSLocal('{{ IPv4 }}', '/etc/dnsdist/fullchain.cer', '/etc/dnsdist/{{ DOMAIN }}.key', { reusePort=true } )
+addTLSLocal('{{ IPv6 }}', '/etc/dnsdist/fullchain.cer', '/etc/dnsdist/{{ DOMAIN }}.key', { reusePort=true } )
 {% endfor %}
 -- DNS over TLS, noads
-addTLSLocal('{{ STATIC }}:854', '/etc/dnsdist/fullchain.cer', '/etc/dnsdist/libredns.gr.key', { reusePort=true } )
+addTLSLocal('{{ IPv4 }}:854', '/etc/dnsdist/fullchain.cer', '/etc/dnsdist/libredns.gr.key', { reusePort=true } )
+addTLSLocal('{{ IPv6 }}:854', '/etc/dnsdist/fullchain.cer', '/etc/dnsdist/libredns.gr.key', { reusePort=true } )
 
 -- DNS over HTTPS
 addDOHLocal("127.0.0.1:8053", nil, nil, "/dns-query", { reusePort=true })
@@ -58,7 +61,7 @@ function maintenance()
 end
 
 -- Bootstrapping DOH and DOT
-addAction(AndRule({DSTPortRule(53),makeRule("{{ DOMAIN }}")}),SpoofAction("{{ STATIC }}"))
+addAction(AndRule({DSTPortRule(53),makeRule("{{ DOMAIN }}")}),SpoofAction("{{ IPv4 }}"))
 addAction("127.0.0.1/8", AllowAction())
 addAction(DSTPortRule(53),DropAction())
 
