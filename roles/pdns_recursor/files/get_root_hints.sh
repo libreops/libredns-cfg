@@ -14,4 +14,5 @@ do
     fi
 done
 
-dig . NS @"$OPENNIC_ROOTNS" | grep -Ev '^;|^$' > /etc/powerdns/root.hints
+dig . NS @"$OPENNIC_ROOTNS" +noall +answer +additional > /etc/powerdns/root.hints
+
