@@ -6,3 +6,9 @@
 
 - name: restart networking
   command: netplan apply
+
+- name: restart systemd-sysctl
+  service:
+    name: systemd-sysctl
+    state: restarted
+

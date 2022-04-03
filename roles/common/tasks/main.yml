@@ -8,3 +8,6 @@
 - import_tasks: journal.yml
 
 - import_tasks: floating.yml
+
+- import_tasks: sysctl.yml
+  tags: sysctl
