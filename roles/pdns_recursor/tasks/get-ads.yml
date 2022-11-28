@@ -14,6 +14,12 @@
     dest: /usr/local/bin/update.stevenBlack.hosts.sh
     mode: 0750
 
+- name: Copy Host File with Predator list
+  copy:
+    src: predator.txt
+    dest: /etc/powerdns/predator.txt
+    mode: 0644
+
 - name: StevenBlack Hosts Renewal
   cron:
     name: "a job for renew StevenBlack Hosts"
