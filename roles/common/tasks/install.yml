@@ -6,10 +6,9 @@
     upgrade: safe
 
 - name: Install Packages
-  apt:
-    pkg:
+  package:
+    name:
       - ansible
-      - certbot
       - dnsutils
       - figlet
       - jq
