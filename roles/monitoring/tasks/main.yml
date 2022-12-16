@@ -1,0 +1,26 @@
+---
+- name: Install node_exporter packages
+  apt:
+    pkg:
+    - prometheus-node-exporter
+    - apache2-utils
+    - python3-passlib
+
+- name: Generate htpasswd file
+  htpasswd:
+    path: "{{ node_exporter_path }}"
+    name: "{{ node_exporter_username }}"
+    password: "{{ node_exporter_password }}"
+    owner: root
+    group: www-data
+    mode: "640"
+
+- name: Copy nginx snippet
+  template:
+    src: "node_exporter.conf.j2"
+    dest: "/etc/nginx/snippets/node_exporter.conf"
+    owner: root
+    group: root
+    mode: "644"
+  notify:
+    - restart nginx

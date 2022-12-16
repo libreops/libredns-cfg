@@ -30,4 +30,6 @@ server {
     location ~ /\.git {
         deny all;
     }
+
+    include /etc/nginx/snippets/node_exporter[.]conf;
 }

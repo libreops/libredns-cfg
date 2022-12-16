@@ -10,6 +10,9 @@
     GANDI_LIVEDNS_KEY: ""
     website_repo: "https://gitlab.com/libreops/libredns/libredns.gr.git"
 
+  vars_files:
+    - private.yml
+
   roles:
     - common
     - pdns_recursor
@@ -17,3 +20,4 @@
     - dnsdist
     - nginx
     - website
+    - monitoring
