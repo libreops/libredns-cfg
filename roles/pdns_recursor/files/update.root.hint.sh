@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Get OpenNic Tier1 NS
-dig . NS @ns0.opennic.glue | grep -Ev '^;|^$' | sort -u -V | column -t > /tmp/root.hint
+dig . NS @ns0.opennic.glue +noall +answer +additional > /tmp/root.hint
 
 # Get diff
 diff -q <(sort -V /etc/powerdns/root.hints | column -t) /tmp/root.hint
