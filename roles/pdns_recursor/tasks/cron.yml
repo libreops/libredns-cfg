@@ -11,3 +11,9 @@
     special_time: weekly
     job: "/usr/local/bin/update.root.hint.sh"
 
+- name: cronjob OpenNic NS DNSKEYs
+  cron:
+    name: "a job for renew openic tier1 NS DNSKEYs"
+    special_time: daily
+    job: "/usr/local/bin/get_root_dnskey.sh"
+
