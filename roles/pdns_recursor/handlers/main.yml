@@ -7,3 +7,7 @@
 
 - name: get root hints
   command: /usr/local/bin/get_root_hints.sh
+
+- name: get root dnskeys
+  command: /usr/local/bin/get_root_dnskey.sh
+

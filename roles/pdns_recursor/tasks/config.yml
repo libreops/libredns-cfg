@@ -11,6 +11,13 @@
     mode: 0755
   notify: get root hints
 
+- name: Get root DNSKEYs from closest OpenNic tier-2
+  copy:
+    src: get_root_dnskey.sh
+    dest: /usr/local/bin/get_root_dnskey.sh
+    mode: 0755
+  notify: get root dnskeys
+
 - name: Powerdns Recursor Configuration
   template:
     src: recursor.conf.j2
