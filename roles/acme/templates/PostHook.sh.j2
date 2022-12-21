@@ -4,5 +4,5 @@
 cp -f /root/.acme.sh/{{ DOMAIN }}/fullchain.cer /root/.acme.sh/{{ DOMAIN }}/{{ DOMAIN }}.key /etc/dnsdist/
 
 # restart services
-systemctl reload dnsdist
+systemctl restart dnsdist
 systemctl reload nginx
