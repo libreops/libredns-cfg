@@ -3,7 +3,7 @@
   template:
     src: pdns.lua.j2
     dest: /etc/powerdns/pdns.lua
-    owner: root
-    group: root
+    owner: pdns
+    group: pdns
     mode: 0644
 
