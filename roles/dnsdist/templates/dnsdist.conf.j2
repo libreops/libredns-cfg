@@ -25,6 +25,7 @@ newServer({address="127.0.0.1:5454", pool="ads"})
 addAction(HTTPPathRule("/ads"), PoolAction("ads"))
 
 -- DoT noads
+addAction(SNIRule("noads.libredns.gr"), PoolAction("ads"))
 addAction(DSTPortRule(854), PoolAction("ads"))
 
 -- fwd queries to:
