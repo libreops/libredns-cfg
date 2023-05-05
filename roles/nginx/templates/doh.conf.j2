@@ -29,7 +29,13 @@ server {
         return 301 https://{{ DOMAIN }}$request_uri;
     }
 
-    location ~ /(ads|noads) {
+    location /ads {
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_pass http://dns-over-https-ads/ads;
+    }
+
+    location /noads {
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_pass http://dns-over-https-ads/ads;
