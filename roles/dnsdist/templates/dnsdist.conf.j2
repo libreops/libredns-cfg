@@ -16,9 +16,9 @@ addTLSLocal('{{ IPv4 }}:854', '/etc/dnsdist/fullchain.cer', '/etc/dnsdist/libred
 addTLSLocal('[{{ IPv6 }}]:854', '/etc/dnsdist/fullchain.cer', '/etc/dnsdist/libredns.gr.key', { reusePort=true } )
 
 -- DNS over HTTPS
-addDOHLocal("127.0.0.1:8053", nil, nil, "/dns-query", { reusePort=true })
+addDOHLocal("127.0.0.1:8053", nil, nil, "/dns-query", { reusePort=true, library="h2o" })
 -- DNS over HTTPS - noads
-addDOHLocal("127.0.0.1:8054", nil, nil, "/ads", { reusePort=true })
+addDOHLocal("127.0.0.1:8054", nil, nil, "/ads", { reusePort=true, library="h2o" })
 
 -- Filter DNS queries to backend DNS based on endpoint
 newServer({address="127.0.0.1:5454", pool="ads"})
