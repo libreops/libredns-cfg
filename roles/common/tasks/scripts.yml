@@ -1,0 +1,8 @@
+---
+- name: Copy list.dot.sh connection and kernel tuning report script
+  copy:
+    src: list.dot.sh
+    dest: /usr/local/bin/list.dot.sh
+    owner: root
+    group: root
+    mode: 0755
