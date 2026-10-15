@@ -1,0 +1,5 @@
+---
+- name: reload iptables rules
+  service:
+    name: netfilter-persistent
+    state: reloaded
