@@ -1,10 +1,21 @@
 ---
-- name: Powerdns Recursor Configuration
+- name: Powerdns Recursor ads Configuration
   template:
-    src: recursor-ads.conf.j2
-    dest: /etc/powerdns/recursor-ads.conf
+    src: recursor-ads.yml.j2
+    dest: /etc/powerdns/recursor-ads.yml
     mode: 0640
     group: pdns
+  notify: restart pdns-recursor-ads
+
+# recursor-ads.yml replaces the old-style recursor-ads.conf
+- name: Remove old-style Powerdns Recursor ads configuration
+  file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+    - /etc/powerdns/recursor-ads.conf
+    - /etc/powerdns/recursor-ads.yml.new
+  notify: restart pdns-recursor-ads
 
 - name: Copy recursor ads systemd service file
   copy:
