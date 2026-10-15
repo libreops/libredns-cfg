@@ -1,0 +1,34 @@
+---
+- name: Preseed iptables-persistent to save rules on install
+  debconf:
+    name: iptables-persistent
+    question: "{{ item }}"
+    vtype: boolean
+    value: "true"
+  loop:
+    - iptables-persistent/autosave_v4
+    - iptables-persistent/autosave_v6
+
+- name: Install iptables packages
+  apt:
+    name:
+      - iptables
+      - iptables-persistent
+    state: present
+
+- name: Copy iptables rules
+  copy:
+    src: "{{ item }}"
+    dest: "/etc/iptables/{{ item }}"
+    owner: root
+    group: root
+    mode: 0644
+  loop:
+    - rules.v4
+    - rules.v6
+  notify: reload iptables rules
+
+- name: Enable netfilter-persistent service
+  service:
+    name: netfilter-persistent
+    enabled: yes
