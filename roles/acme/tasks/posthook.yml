@@ -9,4 +9,4 @@
   lineinfile:
     path: /root/.acme.sh/{{ DOMAIN }}/{{ DOMAIN }}.conf
     regexp: "^Le_PostHook="
-    line: Le_PostHook='/usr/local/bin/PostHook.sh'
+    line: "Le_PostHook='__ACME_BASE64__START_{{ '/usr/local/bin/PostHook.sh' | b64encode }}__ACME_BASE64__END_'"
