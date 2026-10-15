@@ -5,10 +5,16 @@
       - git
     state: present
 
+- name: Check if website is already cloned
+  stat:
+    path: /var/www/html/.git
+  register: website_git
+
 - name: Remove default web folder
   file:
     path: /var/www/html/
     state: absent
+  when: not website_git.stat.exists
 
 - name: Fetch website
   git:
