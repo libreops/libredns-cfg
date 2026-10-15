@@ -15,12 +15,12 @@
     - private.yml
 
   roles:
-    - common
-    - iptables
-    - sshd
-    - pdns_recursor
-    - acme
-    - dnsdist
-    - nginx
-    - website
-    - monitoring
+    - { role: common, tags: common }
+    - { role: iptables, tags: iptables }
+    - { role: sshd, tags: sshd }
+    - { role: pdns_recursor, tags: pdns_recursor }
+    - { role: acme, tags: acme }
+    - { role: dnsdist, tags: dnsdist }
+    - { role: nginx, tags: nginx }
+    - { role: website, tags: website }
+    - { role: monitoring, tags: monitoring }
