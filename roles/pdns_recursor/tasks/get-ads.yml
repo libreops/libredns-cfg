@@ -1,12 +1,18 @@
 ---
+- name: Check if StevenBlack hosts exists
+  stat:
+    path: /etc/powerdns/hosts.txt
+  register: stevenblack_hosts
+
+# The weekly cron job below keeps the file up to date
 - name: Download StevenBlack hosts
   get_url:
     url: https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts
     dest: /etc/powerdns/hosts.txt
-    force: yes
     mode: 0644
     owner: pdns
     group: pdns
+  when: not stevenblack_hosts.stat.exists
 
 - name: Copy Update StevenBlack Hosts Script
   copy:

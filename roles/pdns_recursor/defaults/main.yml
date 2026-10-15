@@ -1,3 +1,4 @@
 ---
 # defaults file for powerdns recursor
 pdns_rec_ver: "noble-rec-51"
+pdns_rec_key: "{{ pdns_rec_ver.split('-', 1)[1] }}-pub.asc"
