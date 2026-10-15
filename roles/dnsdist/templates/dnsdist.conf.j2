@@ -6,32 +6,43 @@ addACL("0.0.0.0/0")
 setLocal('{{ IPv4 }}:53')
 addLocal('[{{ IPv6 }}]:53')
 
--- DNS over TLS
-{% for vcpus in range(ansible_processor_vcpus) %}
-addTLSLocal('{{ IPv4 }}', '/etc/dnsdist/fullchain.cer', '/etc/dnsdist/{{ DOMAIN }}.key', { reusePort=true } )
-addTLSLocal('[{{ IPv6 }}]', '/etc/dnsdist/fullchain.cer', '/etc/dnsdist/{{ DOMAIN }}.key', { reusePort=true } )
+-- DNS over TLS - 1 local per CPU
+{% for vcpus in range(ansible_facts['processor_vcpus']) %}
+addTLSLocal({{ "%-26s" | format("'" ~ IPv4 ~ "',") }} '/etc/dnsdist/fullchain.cer', '/etc/dnsdist/{{ DOMAIN }}.key', { reusePort=true } )
+addTLSLocal({{ "%-26s" | format("'[" ~ IPv6 ~ "]',") }} '/etc/dnsdist/fullchain.cer', '/etc/dnsdist/{{ DOMAIN }}.key', { reusePort=true } )
 {% endfor %}
+
 -- DNS over TLS, noads
-addTLSLocal('{{ IPv4 }}:854', '/etc/dnsdist/fullchain.cer', '/etc/dnsdist/libredns.gr.key', { reusePort=true } )
-addTLSLocal('[{{ IPv6 }}]:854', '/etc/dnsdist/fullchain.cer', '/etc/dnsdist/libredns.gr.key', { reusePort=true } )
+addTLSLocal({{ "%-30s" | format("'" ~ IPv4 ~ ":854',") }} '/etc/dnsdist/fullchain.cer', '/etc/dnsdist/{{ DOMAIN }}.key', { reusePort=true } )
+addTLSLocal({{ "%-30s" | format("'[" ~ IPv6 ~ "]:854',") }} '/etc/dnsdist/fullchain.cer', '/etc/dnsdist/{{ DOMAIN }}.key', { reusePort=true } )
 
 -- DNS over HTTPS
-addDOHLocal("127.0.0.1:8053", nil, nil, "/dns-query", { reusePort=true, library="h2o" })
+addDOHLocal("127.0.0.1:8053", nil, nil, "/dns-query", { reusePort=true, library="h2o", trustForwardedForHeader=true })
 -- DNS over HTTPS - noads
-addDOHLocal("127.0.0.1:8054", nil, nil, "/ads", { reusePort=true, library="h2o" })
+addDOHLocal("127.0.0.1:8054", nil, nil, "/ads", { reusePort=true, library="h2o", trustForwardedForHeader=true })
 
 -- Filter DNS queries to backend DNS based on endpoint
 newServer({address="127.0.0.1:5454", pool="ads"})
 addAction(HTTPPathRule("/ads"), PoolAction("ads"))
 
 -- DoT noads
-addAction(SNIRule("noads.libredns.gr"), PoolAction("ads"))
+addAction(SNIRule("noads.{{ DOMAIN }}"), PoolAction("ads"))
 addAction(DSTPortRule(854), PoolAction("ads"))
 
 -- fwd queries to:
-{% for vcpus in range(ansible_processor_vcpus) %}
+{% for vcpus in range(ansible_facts['processor_vcpus']) %}
 newServer({address="127.0.0.1:5353"})
 {% endfor %}
+
+-- Fix TCP threads (handles the 443 overflow)
+setMaxTCPClientThreads(10)
+
+-- Increase TCP queue size
+setMaxTCPQueuedConnections(10000)
+
+-- Increase internal backend connections to pdns:5454
+-- This fixes the 127.0.0.1:5454 SYN flooding
+--setMaxTCPConnectionsPerDownstream(1000)
 
 -- DDOS protection
 
@@ -42,17 +53,17 @@ setRingBuffersSize(30000, 30)
 local dbr = dynBlockRulesGroup()
 
 -- queries per second, how many seconds, msg, temp block in sec
-dbr:setQueryRate(30, 10, "Exceeded query rate", 90)
+dbr:setQueryRate(30, 10, "Exceeded query rate", 120)
 
 -- prevent DDoS by querying Non eXisting Domains & Server failure
-dbr:setRCodeRate(DNSRCode.NXDOMAIN, 10, 10, "Exceeded NXD rate", 90)
-dbr:setRCodeRate(DNSRCode.SERVFAIL, 10, 10, "Exceeded ServFail rate", 90)
+dbr:setRCodeRate(DNSRCode.NXDOMAIN, 10, 10, "Exceeded NXD rate", 120)
+dbr:setRCodeRate(DNSRCode.SERVFAIL, 10, 10, "Exceeded ServFail rate", 120)
 
 -- rate limit ANY queries
-dbr:setQTypeRate(DNSQType.ANY, 5, 10, "Exceeded ANY rate", 90)
+dbr:setQTypeRate(DNSQType.ANY, 5, 10, "Exceeded ANY rate", 120)
 
 -- limit large responses, that would produce amplification
-dbr:setResponseByteRate(10000, 10, "Exceeded responses bandwidth rate", 90)
+dbr:setResponseByteRate(10000, 10, "Exceeded responses bandwidth rate", 120)
 
 -- exclude localhost from rules
 dbr:excludeRange({"127.0.0.0/8"})
@@ -62,7 +73,9 @@ function maintenance()
 end
 
 -- Bootstrapping DOH and DOT
-addAction(AndRule({DSTPortRule(53),makeRule("{{ DOMAIN }}")}),SpoofAction("{{ IPv4 }}"))
+addAction(AndRule({DSTPortRule(53),makeRule("{{ DOMAIN }}")}),SpoofAction({"{{ IPv4 }}", "{{ IPv6 }}"}))
+-- addAction(AndRule({DSTPortRule(53),makeRule("{{ DOMAIN }}")}),SpoofAction("{{ IPv4 }}"))
+
 addAction("127.0.0.1/8", AllowAction())
 addAction(DSTPortRule(53),DropAction())
 
