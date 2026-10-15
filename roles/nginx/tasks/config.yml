@@ -42,7 +42,8 @@
   lineinfile:
     path: /etc/nginx/mime.types
     insertbefore: "}"
-    line: "application/x-apple-aspen-config .mobileconfig;"
+    regexp: '^\s*application/x-apple-aspen-config\s'
+    line: "    application/x-apple-aspen-config      mobileconfig;"
     state: present
 
 - name: Remove nginx access logs if any
