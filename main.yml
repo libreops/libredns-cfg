@@ -17,6 +17,7 @@
   roles:
     - common
     - iptables
+    - sshd
     - pdns_recursor
     - acme
     - dnsdist
