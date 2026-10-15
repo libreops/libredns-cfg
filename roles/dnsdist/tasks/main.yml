@@ -5,4 +5,5 @@
 
 - import_tasks: config.yml
 
-- import_tasks: ufw.yml
+# ufw removed, firewall is managed by iptables rules
+# - import_tasks: ufw.yml
