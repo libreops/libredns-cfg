@@ -23,6 +23,27 @@
     group: root
     mode: 0755
 
+- name: Make sure nginx systemd override directory exists
+  file:
+    path: /etc/systemd/system/nginx.service.d
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Raise nginx open files limit
+  copy:
+    dest: /etc/systemd/system/nginx.service.d/override.conf
+    owner: root
+    group: root
+    mode: 0644
+    content: |
+      [Service]
+      LimitNOFILE=65535
+  notify:
+    - reload systemd
+    - restart nginx
+
 - name: Copy configuration files
   template:
     src: "{{ item.src }}"
