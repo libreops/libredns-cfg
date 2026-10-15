@@ -12,7 +12,7 @@
       - dnsutils
       - figlet
       - jq
-      - mlocate
+      - plocate
       - socat
       - vim
     state: present
