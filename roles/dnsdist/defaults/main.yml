@@ -1,3 +1,4 @@
 ---
 # defaults file for dnsdist
 dnsdist_ver: "noble-dnsdist-19"
+dnsdist_key: "{{ dnsdist_ver.split('-', 1)[1] }}-pub.asc"

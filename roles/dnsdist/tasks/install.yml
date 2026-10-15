@@ -1,19 +1,42 @@
 ---
-- name: Add an Apt signing key, uses whichever key is at the URL
-  apt_key:
+- name: Make sure apt keyrings directory exists
+  file:
+    path: /etc/apt/keyrings
+    state: directory
+    mode: 0755
+
+- name: Check if dnsdist apt signing key exists
+  stat:
+    path: "/etc/apt/keyrings/{{ dnsdist_key }}"
+  register: dnsdist_key_file
+
+- name: Add dnsdist apt signing key
+  get_url:
     url: https://repo.powerdns.com/FD380FBB-pub.asc
-    state: present
+    dest: "/etc/apt/keyrings/{{ dnsdist_key }}"
+    mode: 0644
+  when: not dnsdist_key_file.stat.exists
 
 - name: Add dnsdist repo
-  apt_repository:
-    repo: deb [arch=amd64] http://repo.powerdns.com/ubuntu {{ dnsdist_ver }} main
-    state: present
+  copy:
+    dest: /etc/apt/sources.list.d/powerdns-dnsdist.sources
+    mode: 0644
+    content: |
+      Types: deb
+      URIs: http://repo.powerdns.com/ubuntu
+      Suites: {{ dnsdist_ver }}
+      Components: main
+      Architectures: amd64
+      Signed-By: /etc/apt/keyrings/{{ dnsdist_key }}
+
+- name: Remove legacy one-line PowerDNS repo file
+  file:
+    path: /etc/apt/sources.list.d/repo_powerdns_com_ubuntu.list
+    state: absent
 
 - name: Install dnsdist packages
   apt:
-    name: "{{ packages }}"
-  vars:
-    packages:
+    name:
       - dnsdist
     state: present
     update_cache: yes
