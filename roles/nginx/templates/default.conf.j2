@@ -1,9 +1,9 @@
 ########################
 ## {{ ansible_managed }}
 
-upstream doh {
-    server 127.0.0.1:8053;
-}
+#upstream doh {
+#    server 127.0.0.1:8053;
+#}
 
 server {
     listen 80 default_server;
@@ -14,8 +14,8 @@ server {
 }
 
 server {
-    listen [::]:443 ssl http2 default_server;
-    listen 443 ssl http2 default_server;
+    listen [::]:443 ssl http2 default_server backlog=4096;
+    listen 443 ssl http2 default_server backlog=4096;
     server_name _;
 
     root /var/www/html/;
