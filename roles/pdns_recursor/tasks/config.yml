@@ -20,9 +20,20 @@
 
 - name: Powerdns Recursor Configuration
   template:
-    src: recursor.conf.j2
-    dest: /etc/powerdns/recursor.conf
+    src: recursor.yml.j2
+    dest: /etc/powerdns/recursor.yml
     mode: 0640
+    group: pdns
+  notify: restart pdns-recursor
+
+# recursor.yml replaces the old-style recursor.conf
+- name: Remove old-style Powerdns Recursor configuration
+  file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+    - /etc/powerdns/recursor.conf
+    - /etc/powerdns/recursor.yml.new
   notify: restart pdns-recursor
 
 - name: Flush handlers up to this point

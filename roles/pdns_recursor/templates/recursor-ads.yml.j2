@@ -1,0 +1,29 @@
+# {{ ansible_managed }}
+# PowerDNS Recursor 5.x YAML settings, ad blocking resolver on 127.0.0.1:5454
+# (pdns-recursor-ads.service runs with --config-name=ads)
+# https://doc.powerdns.com/recursor/yamlsettings.html
+dnssec:
+  validation: process-no-validate
+  # Root and OpenNIC trust anchors, built by /usr/local/bin/get_root_dnskey.sh
+  trustanchors: []
+  trustanchorfile: /etc/powerdns/root.key
+incoming:
+  edns_padding_from:
+  - 127.0.0.1
+  listen:
+  - 127.0.0.1
+  port: 5454
+logging:
+  quiet: true
+outgoing:
+  source_address:
+  - {{ IPv4 }}
+recursor:
+  config_dir: /etc/powerdns
+  # StevenBlack hosts list, refreshed weekly by update.stevenBlack.hosts.sh
+  etc_hosts_file: /etc/powerdns/hosts.txt
+  export_etc_hosts: true
+  hint_file: /etc/powerdns/root.hints
+  lua_dns_script: /etc/powerdns/pdns.lua
+  setgid: pdns
+  setuid: pdns
