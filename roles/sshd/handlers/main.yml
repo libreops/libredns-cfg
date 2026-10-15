@@ -1,0 +1,11 @@
+---
+# Ubuntu 24.04 uses socket activation, sshd-socket-generator reads the
+# Port from sshd_config on daemon-reload
+- name: restart ssh
+  systemd:
+    name: "{{ item }}"
+    state: restarted
+    daemon_reload: yes
+  loop:
+    - ssh.socket
+    - ssh.service
