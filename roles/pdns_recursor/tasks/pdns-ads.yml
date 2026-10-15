@@ -6,23 +6,16 @@
     mode: 0640
     group: pdns
 
-- name: Copy recursor systemd service file
+- name: Copy recursor ads systemd service file
   copy:
-    src: /lib/systemd/system/pdns-recursor.service
+    src: pdns-recursor-ads.service
     dest: /lib/systemd/system/pdns-recursor-ads.service
     mode: 0644
-    remote_src: yes
-
-- name: Ensure Powerdns Recursor systemd service file points to ads
-  lineinfile:
-    path: /lib/systemd/system/pdns-recursor-ads.service
-    regexp: "^ExecStart=(.*)"
-    line: 'ExecStart=\1 --config-name=ads'
-    backrefs: yes
+  notify: restart pdns-recursor-ads
 
 - name: Enable service pdns-recursor-ads, also issue daemon-reload
   systemd:
-    state: restarted
+    state: started
     enabled: yes
     daemon_reload: yes
     name: pdns-recursor-ads

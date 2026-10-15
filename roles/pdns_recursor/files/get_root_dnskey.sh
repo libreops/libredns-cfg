@@ -5,7 +5,7 @@ OPENNIC_ROOTNS=$(curl -sL --retry 10 --retry-delay 5 'https://api.opennicproject
 
 # Exit script if in the end OPENNIC_ROOTNS is empty
 if [ -z "$OPENNIC_ROOTNS" ]; then
-    echo "Failed to get OpenNic RootNS"
+    echo " Failed to get OpenNic RootNS"
     exit 1
 fi
 
