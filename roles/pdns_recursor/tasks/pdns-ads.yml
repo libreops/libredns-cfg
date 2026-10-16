@@ -1,11 +1,15 @@
 ---
+# The ads resolver runs as an instance of the packaged template unit
+# pdns-recursor@.service: pdns-recursor@ads reads /etc/powerdns/recursor-ads.yml
+# and gets its own runtime directory (/run/pdns-recursor-ads) for its
+# control socket.
 - name: Powerdns Recursor ads Configuration
   template:
     src: recursor-ads.yml.j2
     dest: /etc/powerdns/recursor-ads.yml
     mode: 0640
     group: pdns
-  notify: restart pdns-recursor-ads
+  notify: restart pdns-recursor@ads
 
 # recursor-ads.yml replaces the old-style recursor-ads.conf
 - name: Remove old-style Powerdns Recursor ads configuration
@@ -15,18 +19,41 @@
   loop:
     - /etc/powerdns/recursor-ads.conf
     - /etc/powerdns/recursor-ads.yml.new
-  notify: restart pdns-recursor-ads
+  notify: restart pdns-recursor@ads
 
-- name: Copy recursor ads systemd service file
-  copy:
-    src: pdns-recursor-ads.service
-    dest: /lib/systemd/system/pdns-recursor-ads.service
-    mode: 0644
-  notify: restart pdns-recursor-ads
+# The old custom pdns-recursor-ads.service shared RuntimeDirectory=pdns-recursor
+# with pdns-recursor.service, so restarting one removed the control socket of
+# the other. Retire it before pdns-recursor@ads takes over port 5454.
+- name: Check for the old custom pdns-recursor-ads unit
+  stat:
+    path: /lib/systemd/system/pdns-recursor-ads.service
+  register: pdns_rec_ads_old_unit
 
-- name: Enable service pdns-recursor-ads, also issue daemon-reload
+# Stopping it removes /run/pdns-recursor once more, restart pdns-recursor
+# so it recreates its control socket there
+- name: Stop and disable the old custom pdns-recursor-ads service
+  systemd:
+    name: pdns-recursor-ads
+    state: stopped
+    enabled: no
+  when: pdns_rec_ads_old_unit.stat.exists
+  notify: restart pdns-recursor
+
+- name: Remove the old custom pdns-recursor-ads unit
+  file:
+    path: /lib/systemd/system/pdns-recursor-ads.service
+    state: absent
+  when: pdns_rec_ads_old_unit.stat.exists
+
+- name: Enable service pdns-recursor@ads, also issue daemon-reload
   systemd:
     state: started
     enabled: yes
     daemon_reload: yes
-    name: pdns-recursor-ads
+    name: pdns-recursor@ads
+
+- name: Restart pdns-recursor@ads after a package upgrade
+  systemd:
+    name: pdns-recursor@ads
+    state: restarted
+  when: pdns_rec_install is changed
