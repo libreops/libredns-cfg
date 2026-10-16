@@ -1,4 +1,6 @@
 ---
 # defaults file for powerdns recursor
-pdns_rec_ver: "noble-rec-51"
+pdns_rec_ver: "noble-rec-54"
 pdns_rec_key: "{{ pdns_rec_ver.split('-', 1)[1] }}-pub.asc"
+# package version series from the repo suite, eg. noble-rec-54 -> 5.4*
+pdns_rec_pkg_ver: "{{ pdns_rec_ver.split('-')[-1] | list | join('.') }}*"

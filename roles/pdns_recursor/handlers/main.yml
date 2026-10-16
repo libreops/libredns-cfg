@@ -11,8 +11,7 @@
 - name: get root dnskeys
   command: /usr/local/bin/get_root_dnskey.sh
 
-- name: restart pdns-recursor-ads
+- name: restart pdns-recursor@ads
   systemd:
-    name: pdns-recursor-ads
+    name: pdns-recursor@ads
     state: restarted
-    daemon_reload: yes

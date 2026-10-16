@@ -15,5 +15,5 @@ if [ "${LINES}" -gt "200" -a "${DIFF_STATUS}" != "0" ]; then
     cat /etc/powerdns/predator.txt >> /tmp/hosts.txt
     chmod 0644 /tmp/hosts.txt
     chown pdns:pdns /tmp/hosts.txt
-    mv -f /tmp/hosts.txt /etc/powerdns/hosts.txt && systemctl restart pdns-recursor-ads
+    mv -f /tmp/hosts.txt /etc/powerdns/hosts.txt && systemctl restart pdns-recursor@ads
 fi

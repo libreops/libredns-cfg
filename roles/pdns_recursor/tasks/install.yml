@@ -28,6 +28,7 @@
       Components: main
       Architectures: amd64
       Signed-By: /etc/apt/keyrings/{{ pdns_rec_key }}
+  register: pdns_rec_repo
 
 - name: Remove legacy one-line PowerDNS repo file
   file:
@@ -40,9 +41,17 @@
     dest: /etc/apt/preferences.d/pdns
     mode: 0644
 
+# Install the pdns_rec_ver release series, eg. pdns-recursor=5.4*, which also
+# moves an older series to it. Patch releases come with playbooks/update_os.yml.
+# policy_rc_d stops the package from restarting the recursors, the handler and
+# pdns-ads.yml restart them after their YAML configuration is in place.
+# A dry run cannot see the new series before the repo file is written, skip it
 - name: Install PowerDNS packages
   apt:
-    pkg: pdns-recursor
+    pkg: "pdns-recursor={{ pdns_rec_pkg_ver }}"
     state: present
     update_cache: yes
     policy_rc_d: 101
+  register: pdns_rec_install
+  notify: restart pdns-recursor
+  when: not (ansible_check_mode and pdns_rec_repo is changed)
