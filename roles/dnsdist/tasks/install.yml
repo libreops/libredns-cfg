@@ -28,15 +28,24 @@
       Components: main
       Architectures: amd64
       Signed-By: /etc/apt/keyrings/{{ dnsdist_key }}
+  register: dnsdist_repo
 
 - name: Remove legacy one-line PowerDNS repo file
   file:
     path: /etc/apt/sources.list.d/repo_powerdns_com_ubuntu.list
     state: absent
 
+# Install the dnsdist_ver release series, eg. dnsdist=2.1*, which also moves
+# an older series to it. Patch releases come with playbooks/update_os.yml.
+# policy_rc_d stops the package from restarting dnsdist with the old config,
+# the handler restarts it after config.yml deployed the matching dnsdist.conf.
+# A dry run cannot see the new series before the repo file is written, skip it
 - name: Install dnsdist packages
   apt:
     name:
-      - dnsdist
+      - "dnsdist={{ dnsdist_pkg_ver }}"
     state: present
     update_cache: yes
+    policy_rc_d: 101
+  notify: restart dnsdist
+  when: not (ansible_check_mode and dnsdist_repo is changed)

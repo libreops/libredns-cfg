@@ -1,4 +1,6 @@
 ---
 # defaults file for dnsdist
-dnsdist_ver: "noble-dnsdist-19"
+dnsdist_ver: "noble-dnsdist-21"
 dnsdist_key: "{{ dnsdist_ver.split('-', 1)[1] }}-pub.asc"
+# package version series from the repo suite, eg. noble-dnsdist-21 -> 2.1*
+dnsdist_pkg_ver: "{{ dnsdist_ver.split('-')[-1] | list | join('.') }}*"

@@ -31,43 +31,39 @@ server {
         return 301 https://{{ DOMAIN }}$request_uri;
     }
 
+    # dnsdist 2.1 serves DoH over HTTP/2 only (nghttp2), so pass the
+    # queries with grpc_pass, which speaks plain HTTP/2 to the upstream
     location /ads {
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $remote_addr;
-        proxy_pass http://dns-over-https-ads/ads;
+        grpc_set_header Host $host;
+        grpc_set_header X-Real-IP $remote_addr;
+        grpc_set_header X-Forwarded-For $remote_addr;
+        grpc_pass grpc://dns-over-https-ads;
 
         # in each DoH location
-        proxy_http_version 1.1;
-        proxy_set_header Connection "";
-        proxy_connect_timeout 2s;
-        proxy_read_timeout 5s;
+        grpc_connect_timeout 2s;
+        grpc_read_timeout 5s;
     }
 
     location /noads {
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $remote_addr;
-        proxy_pass http://dns-over-https-ads/ads;
+        rewrite ^/noads(.*)$ /ads$1 break;
+        grpc_set_header Host $host;
+        grpc_set_header X-Real-IP $remote_addr;
+        grpc_set_header X-Forwarded-For $remote_addr;
+        grpc_pass grpc://dns-over-https-ads;
 
         # in each DoH location
-        proxy_http_version 1.1;
-        proxy_set_header Connection "";
-        proxy_connect_timeout 2s;
-        proxy_read_timeout 5s;
+        grpc_connect_timeout 2s;
+        grpc_read_timeout 5s;
     }
 
     location /dns-query {
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $remote_addr;
-        proxy_pass http://dns-over-https/dns-query;
+        grpc_set_header Host $host;
+        grpc_set_header X-Real-IP $remote_addr;
+        grpc_set_header X-Forwarded-For $remote_addr;
+        grpc_pass grpc://dns-over-https;
 
         # in each DoH location
-        proxy_http_version 1.1;
-        proxy_set_header Connection "";
-        proxy_connect_timeout 2s;
-        proxy_read_timeout 5s;
+        grpc_connect_timeout 2s;
+        grpc_read_timeout 5s;
     }
-
 }
