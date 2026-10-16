@@ -16,10 +16,11 @@ addTLSLocal({{ "%-26s" | format("'[" ~ IPv6 ~ "]',") }} '/etc/dnsdist/fullchain.
 addTLSLocal({{ "%-30s" | format("'" ~ IPv4 ~ ":854',") }} '/etc/dnsdist/fullchain.cer', '/etc/dnsdist/{{ DOMAIN }}.key', { reusePort=true } )
 addTLSLocal({{ "%-30s" | format("'[" ~ IPv6 ~ "]:854',") }} '/etc/dnsdist/fullchain.cer', '/etc/dnsdist/{{ DOMAIN }}.key', { reusePort=true } )
 
--- DNS over HTTPS
-addDOHLocal("127.0.0.1:8053", nil, nil, "/dns-query", { reusePort=true, library="h2o", trustForwardedForHeader=true })
+-- DNS over HTTPS, plain HTTP/2 (h2c) behind nginx grpc_pass
+-- dnsdist 2.1 only supports nghttp2, which does not speak HTTP/1.1
+addDOHLocal("127.0.0.1:8053", nil, nil, "/dns-query", { reusePort=true, trustForwardedForHeader=true })
 -- DNS over HTTPS - noads
-addDOHLocal("127.0.0.1:8054", nil, nil, "/ads", { reusePort=true, library="h2o", trustForwardedForHeader=true })
+addDOHLocal("127.0.0.1:8054", nil, nil, "/ads", { reusePort=true, trustForwardedForHeader=true })
 
 -- Filter DNS queries to backend DNS based on endpoint
 newServer({address="127.0.0.1:5454", pool="ads"})
